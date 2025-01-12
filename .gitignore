@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Data artefacts: raw payloads and the warehouse are reproducible from source.
+# The manifest is kept so a reviewer can verify what was fetched.
+data/raw/
+data/bronze/
+data/silver/
+data/gold/
+data/models/
+data/export/
+data/*.duckdb
+data/logs/*.jsonl
+data/logs/*.log
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
