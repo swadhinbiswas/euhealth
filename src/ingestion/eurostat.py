@@ -207,6 +207,36 @@ def load_population_nuts(geo_level: str = "NUTS2", time: str = "2023") -> pd.Dat
     return pull_one(dataset, params, f"{dataset.code}_{geo_level}_{time}.json")
 
 
+def load_population_total() -> pd.DataFrame:
+    """Total national population per country-year.
+
+    This is the denominator for every per-capita workforce measure.
+    ``demo_pjanind`` cannot supply it: that table holds *ratios* such as
+    ``PC_Y0_14`` (percentage of population aged 0-14), not headcounts.
+    ``demo_r_pjangrp3`` carries the actual counts, and accepts a national
+    ``geo=`` code in addition to ``geoLevel=``.
+    """
+    dataset = DATASETS["population_nuts"]
+    frames = []
+    for geo in EU27:
+        frame = pull_one(
+            dataset,
+            {"geo": geo, "sinceTimePeriod": "2000", "unit": "NR"},
+            f"{dataset.code}_{geo}_total.json",
+        )
+        if not frame.empty:
+            frames.append(frame)
+    if not frames:
+        return pd.DataFrame()
+    out = pd.concat(frames, ignore_index=True)
+    # The cube is wide; keep the all-ages, both-sexes total only.
+    if "age" in out.columns:
+        out = out[out["age"] == "TOTAL"]
+    if "sex" in out.columns:
+        out = out[out["sex"] == "T"]
+    return out.reset_index(drop=True)
+
+
 #: name -> loader, used by scripts/ingest_all.py
 LOADERS: dict[str, Any] = {
     "health_workforce": load_health_workforce,
@@ -221,6 +251,7 @@ LOADERS: dict[str, Any] = {
     "population_nuts2": lambda: load_population_nuts("NUTS2"),
     "population_nuts3": lambda: load_population_nuts("NUTS3"),
     "population_country": load_population_country,
+    "population_total": load_population_total,
     "life_expectancy": load_life_expectancy,
     "mortality": load_mortality,
     "density": load_density,

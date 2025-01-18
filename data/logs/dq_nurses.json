@@ -1,0 +1,91 @@
+{
+  "table": "fact_healthcare_workers[nurse]",
+  "generated_at": "2026-10-05T06:15:20+00:00",
+  "score": 77.78,
+  "rows": 9,
+  "failures": 1,
+  "warnings": 2,
+  "results": [
+    {
+      "name": "schema",
+      "family": "validity",
+      "status": "pass",
+      "observed": 3,
+      "threshold": 3,
+      "detail": "all present",
+      "severity": "error"
+    },
+    {
+      "name": "null_rate",
+      "family": "completeness",
+      "status": "pass",
+      "observed": 0.0,
+      "threshold": 0.05,
+      "detail": "worst column: None",
+      "severity": "error"
+    },
+    {
+      "name": "duplicate_rate",
+      "family": "uniqueness",
+      "status": "pass",
+      "observed": 0.0,
+      "threshold": 0.0,
+      "detail": "key: geo+time+sex+age+profession+dataset_code",
+      "severity": "error"
+    },
+    {
+      "name": "range_value",
+      "family": "validity",
+      "status": "pass",
+      "observed": 0.0,
+      "threshold": 0.0,
+      "detail": "0 of 4816 outside [0, None]",
+      "severity": "error"
+    },
+    {
+      "name": "ref_country",
+      "family": "validity",
+      "status": "pass",
+      "observed": 21,
+      "threshold": 27,
+      "detail": "all valid",
+      "severity": "error"
+    },
+    {
+      "name": "country_coverage",
+      "family": "completeness",
+      "status": "warn",
+      "observed": 0.7778,
+      "threshold": 0.95,
+      "detail": "21/27 countries present; missing: ['BG', 'CY', 'LU', 'PL', 'PT', 'SE']",
+      "severity": "error"
+    },
+    {
+      "name": "reporting_completeness",
+      "family": "consistency",
+      "status": "warn",
+      "observed": 0.5759,
+      "threshold": 0.9,
+      "detail": "372/646 country-years report all 8 age codes",
+      "severity": "error"
+    },
+    {
+      "name": "total_reconciliation",
+      "family": "consistency",
+      "status": "fail",
+      "observed": 1.5267,
+      "threshold": 1.0,
+      "detail": "1/372 fully-reported country-years exceed tolerance; worst 1.527%",
+      "severity": "error"
+    },
+    {
+      "name": "freshness",
+      "family": "freshness",
+      "status": "pass",
+      "observed": 642,
+      "threshold": 900,
+      "detail": "newest observation: 2025-01-01",
+      "severity": "error"
+    }
+  ]
+}
