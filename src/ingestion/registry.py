@@ -205,6 +205,41 @@ DATASETS: dict[str, Dataset] = {
         unit="PER",
         notes="2025 baseline supersedes proj_23np. Scenarios: BSL LFRT LMRT HMIGR LMIGR NMIGR.",
     ),
+    # --- Regional (NUTS 2) supply --------------------------------------------
+    # These are the only OBSERVED regional workforce figures Eurostat
+    # publishes. hlth_rs_phys / hlth_rs_nurse are national only, so without
+    # these every regional number would have to be an allocation.
+    #
+    # Eurostat has discontinued this series: coverage is strong to 2015 and
+    # then collapses (2014: 4063 values, 2016: 1625, 2020: 671, 2021: 54).
+    # Regional analysis is therefore anchored on the last well-covered year
+    # and anything later is explicitly extrapolated.
+    "regional_workforce": Dataset(
+        code="hlth_rs_prsrg",
+        label="Health personnel by NUTS 2 region",
+        dims=("freq", "unit", "isco08", "geo", "time"),
+        measure_dims=("isco08",),
+        since=2000,
+        notes="Discontinued regional series. ISCO08: OC221 doctors, "
+              "OC222_322 nurses+midwives, OC2261 dentists, OC2262 pharmacists, "
+              "OC2264 physiotherapists. No age or sex dimension.",
+    ),
+    "regional_nursing": Dataset(
+        code="hlth_rs_prsns",
+        label="Nursing and caring professionals, national, historical",
+        dims=("freq", "unit", "wstatus", "isco08", "geo", "time"),
+        measure_dims=("wstatus", "isco08"),
+        since=2000,
+        notes="National, by ISCO08 and work status. 1980-2020.",
+    ),
+    "regional_beds": Dataset(
+        code="hlth_rs_bdsrg",
+        label="Hospital beds by NUTS 2 region",
+        dims=("freq", "unit", "facility", "geo", "time"),
+        measure_dims=("facility",),
+        since=2000,
+        notes="Observed regional capacity. Discontinued after 2016.",
+    ),
     # --- Labour market ------------------------------------------------------
     "labour_status": Dataset(
         code="lfsa_egaps",

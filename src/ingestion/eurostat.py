@@ -126,6 +126,35 @@ def load_staff_specialty() -> pd.DataFrame:
     return pull_per_country(DATASETS["staff_specialty"])
 
 
+# --- Regional supply ----------------------------------------------------------
+
+def load_whole_table(key: str) -> pd.DataFrame:
+    """Pull an entire Eurostat table in one request, with no ``geo`` filter.
+
+    The regional tables mix country codes and NUTS codes in a single ``geo``
+    dimension, so a per-country loop would be both wrong and wasteful. With no
+    geo filter the API returns every geography at once.
+    """
+    dataset = DATASETS[key]
+    return pull_one(
+        dataset, {"sinceTimePeriod": "1993"}, f"{dataset.code}_all.json"
+    )
+
+
+def load_regional_workforce() -> pd.DataFrame:
+    """Observed NUTS 2 workforce by ISCO08 occupation."""
+    return load_whole_table("regional_workforce")
+
+
+def load_regional_beds() -> pd.DataFrame:
+    """Observed NUTS 2 hospital beds by facility type."""
+    return load_whole_table("regional_beds")
+
+
+def load_regional_nursing() -> pd.DataFrame:
+    return pull_per_country(DATASETS["regional_nursing"])
+
+
 def load_graduates() -> pd.DataFrame:
     return pull_per_country(DATASETS["graduates"])
 
@@ -243,6 +272,9 @@ LOADERS: dict[str, Any] = {
     "physicians": load_physicians,
     "nurses": load_nurses,
     "staff_specialty": load_staff_specialty,
+    "regional_workforce": load_regional_workforce,
+    "regional_beds": load_regional_beds,
+    "regional_nursing": load_regional_nursing,
     "graduates": load_graduates,
     "worker_migration": load_worker_migration,
     "beds": load_beds,
