@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import pandas as pd
@@ -52,7 +52,7 @@ class CheckResult:
 class DQReport:
     table: str
     generated_at: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat(
+        default_factory=lambda: datetime.now(UTC).isoformat(
             timespec="seconds"
         )
     )
@@ -280,8 +280,8 @@ def check_freshness(df: pd.DataFrame, max_age_days: int = 900,
     # pandas returns a tz-naive timestamp; compare in UTC explicitly.
     observed = newest.to_pydatetime()
     if observed.tzinfo is None:
-        observed = observed.replace(tzinfo=timezone.utc)
-    age_days = (datetime.now(timezone.utc) - observed).days
+        observed = observed.replace(tzinfo=UTC)
+    age_days = (datetime.now(UTC) - observed).days
     return CheckResult(
         "freshness", "freshness",
         PASS if age_days <= max_age_days else FAIL, age_days, max_age_days,

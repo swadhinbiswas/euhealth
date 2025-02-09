@@ -15,11 +15,11 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from config import WAREHOUSE  # noqa: E402
 from geo.regional import (  # noqa: E402
-    keep_reconciling,
     ISCO_PROFESSION,
     annotate_nuts,
     build_regional_workforce,
     detect_reporting_level,
+    keep_reconciling,
     load_nuts_index,
     reconciliation_report,
 )
@@ -98,31 +98,30 @@ def build() -> dict:
     # Some country-years in the discontinued series contain duplicated region
     # rows that double the regional sum. Those are dropped rather than
     # published, so every figure in the fact is observed AND verified.
+    # Verify each profession group against its own national benchmark, then keep
+    # only the rows that survive. The subset must be filtered in isolation:
+    # applying one profession's allowed set to the whole fact would retain the
+    # other profession's rows for the same country-years, which is how
+    # Denmark's nurses survived a filter that correctly rejected them.
     verified = []
-    for isco, (label, _) in BENCHMARKS.items():
+    for isco in BENCHMARKS:
         benchmark = national_benchmark(isco)
         if benchmark.empty:
             continue
         target = ISCO_PROFESSION[isco]
-        subset = keep_reconciling(fact, benchmark, target)
-        verified.append((target, subset))
-    fact = pd.concat([s for _, s in verified], ignore_index=True) if verified \
-        else fact
-
-    # Final guard: re-verify the concatenated fact per profession. Building
-    # the union above can reintroduce country-years that one profession's
-    # filter removed, so the published table is checked once more and only
-    # reconciling rows survive.
-    final = []
-    for isco, (label, _) in BENCHMARKS.items():
-        benchmark = national_benchmark(isco)
-        if benchmark.empty:
+        subset = fact[fact["profession_code"] == target]
+        if subset.empty:
             continue
-        target = ISCO_PROFESSION[isco]
-        final.append(keep_reconciling(fact, benchmark, target))
-    if final:
-        fact = pd.concat(final, ignore_index=True)
+        kept = keep_reconciling(subset, benchmark, target)
+        verified.append(kept)
+        dropped = len(subset) - len(kept)
+        print(f"  {target}: kept {len(kept):5d}/{len(subset):5d} rows "
+              f"({dropped} country-years failed reconciliation)")
 
+    fact = (
+        pd.concat(verified, ignore_index=True)
+        if verified else pd.DataFrame()
+    )
     fact = fact.sort_values(
         ["country_code", "year", "profession_code", "nuts_code"]
     ).reset_index(drop=True)

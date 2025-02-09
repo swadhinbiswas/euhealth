@@ -10,13 +10,13 @@ from quality.dq import (
     DQReport,
     check_coverage,
     check_duplicate_rate,
+    check_freshness,
     check_null_rate,
     check_range,
     check_referential_country,
     check_reporting_completeness,
     check_schema,
     check_total_reconciliation,
-    check_freshness,
 )
 
 EU = {"DE", "FR", "IT", "ES", "NL", "PL"}

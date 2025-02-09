@@ -23,14 +23,10 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-from ingestion.registry import DATASETS, EU27
-from transform.age_map import AGE_CODE_MAP, to_canonical
+from transform.age_map import to_canonical
 from warehouse.dims import (
-    ALL_DIMENSIONS,
     BED_FACILITY,
-    BED_OWNER,
     ICU_FACILITY,
-    TRAINING_PLACE,
 )
 
 GRAIN = {

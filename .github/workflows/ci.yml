@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - name: Ruff
+        run: ruff check src tests scripts
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pandas numpy pyarrow duckdb requests pytest
+
+      # The unit suite is hermetic: it runs against the committed fixture in
+      # tests/fixtures and against synthetic panels built in the test module.
+      # Tests that need the full raw landing zone skip themselves when it is
+      # absent, so CI never depends on live Eurostat availability.
+      - name: Unit tests (hermetic)
+        run: PYTHONPATH=src python -m pytest -q
+
+      - name: Verbatim warehouse smoke test
+        # Proves the documented commands still work end to end against live
+        # data. Allowed to fail on the network, so a Eurostat outage does not
+        # produce a false red build.
+        continue-on-error: true
+        env:
+          PYTHONPATH: src
+        run: |
+          pip install statsmodels scikit-learn lightgbm xgboost prophet
+          python scripts/ingest_all.py health_workforce
+          python -m src.warehouse.cli
+          python -m src.geo.cli
+          python -m src.ml.cli --quick

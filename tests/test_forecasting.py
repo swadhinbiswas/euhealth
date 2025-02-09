@@ -21,7 +21,6 @@ from ml.forecasting import (
     TreePanelForecaster,
     build_features,
     detect_structural_breaks,
-    evaluate_model,
     mae,
     mape,
     rmse,
@@ -124,9 +123,6 @@ class TestWalkForward:
         model = NaiveForecaster()
         for train_through, test_from, test_to in folds:
             train = panel[panel["year"] <= train_through]
-            test = panel[
-                (panel["year"] >= test_from) & (panel["year"] <= test_to)
-            ]
             predicted = model.fit_predict(
                 train, list(range(test_from, test_to + 1))
             )
@@ -310,8 +306,12 @@ class TestGlobalModels:
 class TestStructuralBreaks:
     def test_detects_a_level_shift(self, panel):
         broken = panel.copy()
-        mask = (broken.country_code == "IT") & (broken.profession_code == "PHYS")
-        broken.loc[broken.year >= 2020, "headcount"] *= 0.6
+        # Introduce a level shift in Italy's physician series from 2020 on.
+        broken.loc[
+            (broken.country_code == "IT")
+            & (broken.profession_code == "PHYS")
+            & (broken.year >= 2020), "headcount"
+        ] *= 0.6
         breaks = detect_structural_breaks(broken)
         assert not breaks.empty
         assert "IT" in set(breaks["country_code"])

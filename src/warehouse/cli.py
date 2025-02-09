@@ -18,7 +18,6 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from config import (  # noqa: E402
     REFERENCE_DOCTORS_PER_1000,
-    REFERENCE_NURSES_PER_1000,
     WAREHOUSE,
 )
 from ingestion import eurostat  # noqa: E402

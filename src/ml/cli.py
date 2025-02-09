@@ -159,7 +159,8 @@ def main(quick: bool = False) -> None:
 
 
 def _forecast_with(panel: pd.DataFrame, champion: str) -> pd.DataFrame:
-    from ml.forecasting import NaiveForecaster, all_models as _all
+    from ml.forecasting import NaiveForecaster
+    from ml.forecasting import all_models as _all
 
     model = NaiveForecaster()
     for candidate in _all():

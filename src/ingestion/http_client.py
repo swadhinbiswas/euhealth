@@ -5,11 +5,10 @@ pipeline is reproducible and auditable (source fidelity layer).
 """
 from __future__ import annotations
 
-import gzip
 import hashlib
 import json
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import requests
@@ -39,8 +38,7 @@ def _session() -> requests.Session:
     return s
 
 
-def _raw_path(source: str, name: str) -> "object":
-    from pathlib import Path
+def _raw_path(source: str, name: str) -> object:
 
     folder = RAW / source
     folder.mkdir(parents=True, exist_ok=True)
@@ -122,7 +120,7 @@ def log_jsonl(name: str, payload: dict) -> None:
     LOGS.mkdir(parents=True, exist_ok=True)
     path = LOGS / name
     payload = {
-        "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "ts": datetime.now(UTC).isoformat(timespec="seconds"),
         **payload,
     }
     with path.open("a", encoding="utf-8") as fh:

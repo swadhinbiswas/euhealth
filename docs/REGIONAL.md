@@ -37,7 +37,11 @@ than assigned one.
 ## Result
 
 ```
-fact_regional_workforce: 6,077 rows, 112 regions, 12 countries, 2000-2020
+PHYS: kept 2024/3749 rows (1725 country-years failed reconciliation)
+NURS: kept  216/1756 rows (1540 country-years failed reconciliation)
+
+fact_regional_workforce: 2,240 rows, 111 regions, 12 countries, 2000-2020
+reconciliation vs national totals: 238/238 country-years (100.0%)
 ```
 
 Reporting-level detection, anchored on 2015:
@@ -45,33 +49,31 @@ Reporting-level detection, anchored on 2015:
 - **Doctors (`OC221`): 16 of 25 countries** reconcile at a single NUTS level
 - **Nurses (`OC222_322`): 6 of 21 countries** reconcile
 
-Reconciliation of the published fact against national totals: **79.3%** of
-country-years within 5%.
+**Every published row is verified against a national total.** Country-years that
+do not reconcile are dropped rather than published.
 
-## Honest limitations
+## Why coverage shrank, and why that is the right trade
 
-**1. The regional series is discontinued.** Coverage is strong to 2015 and
-collapses afterwards — 4,063 values (2014), 1,625 (2016), 671 (2020), 54 (2021).
-Regional figures after ~2015 are thin and should be treated as indicative. The
-layer is keyed by ISCO08 occupation, not by age or sex, so no regional age
-pyramid or retirement projection is possible from this source.
+An earlier build published 6,077 rows with 79.3% reconciliation. Filtering each
+profession group in isolation — rather than applying one profession's allowed
+set to the whole fact, which had been retaining the other profession's rows —
+brought reconciliation to 100% and coverage to 2,240 rows.
 
-**2. Twelve countries only.** Reporting-level detection plus reconciliation
-excludes 13 of 25. That is the price of not publishing double-counted figures.
+The retention rates are themselves a finding:
 
-**3. Open issue — the reconciliation filter is not fully effective.**
-Denmark nurses remain **+66%** over the national benchmark (not a double count;
-a definitional mismatch between ISCO `OC222_322` regionally and `hlth_rs_prsns`
-nationally). The `keep_reconciling` filter should have removed these rows and
-partly fails to, so 20.7% of published country-years still sit outside
-tolerance. Fixing this means filtering per profession group in a single pass
-rather than concatenating per-profession results. Until then, **treat
-`data/export/regional_reconciliation.csv` as the authoritative filter** and join
-on it before using any regional figure.
+| Profession | Retained country-years |
+|---|---|
+| Physicians | **54%** (2024 / 3749) |
+| Nurses | **12%** (216 / 1756) |
 
-**4. Twelve countries is a small base for EU-level claims.** Regional ranking
-across 112 regions is defensible; a Europe-wide "medical desert" verdict built
-on this is not.
+Most of that loss is not a data fault but a genuine disagreement between two
+Eurostat tables: `hlth_rs_prsrg` (regional, ISCO08) and `hlth_rs_prsns`
+(national, ISCO08) do not cover the same population. Denmark is the clearest
+case — its NUTS 2 rows sum to 96,078, internally consistent, while the national
+table reports 57,897 for the same year and country, a 66% divergence.
+
+Publishing only verified rows costs coverage and buys a guarantee. The
+alternative is a regional map that looks authoritative and is wrong in places.
 
 ## Artefacts
 
@@ -82,6 +84,23 @@ on this is not.
 | `data/export/regional_reconciliation.csv` | Regional vs national, per country-year |
 | `fact_regional_workforce` (DuckDB) | Verified regional workforce |
 | `dim_region_reporting` (DuckDB) | Which level each country reports at |
+
+## Honest limitations
+
+**1. The regional series is discontinued.** Coverage is strong to 2015 and
+collapses afterwards — 4,063 values (2014), 1,625 (2016), 671 (2020), 54 (2021).
+Regional figures after ~2015 are thin and should be treated as indicative.
+
+**2. It is keyed by ISCO08 occupation, not age or sex.** No regional age
+pyramid or regional retirement projection is possible from this source.
+
+**3. Twelve countries survive verification.** Reporting-level detection plus
+reconciliation excludes 13 of 25. That is the price of not publishing
+double-counted or unreconciled figures.
+
+**4. Twelve countries is a small base for EU-level claims.** Ranking across 111
+regions is defensible. A Europe-wide "medical desert" verdict built on this is
+not.
 
 ## What this means for the original caveat
 
