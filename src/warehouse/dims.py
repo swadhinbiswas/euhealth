@@ -101,28 +101,54 @@ def dim_country() -> pd.DataFrame:
 
 
 def dim_region(nuts_codes: pd.Series | None = None,
-               level: str = "NUTS2") -> pd.DataFrame:
+               level: str = "NUTS2",
+               nuts_index: dict | None = None) -> pd.DataFrame:
     """NUTS region dimension, built from observed NUTS identifiers.
 
     ``country_code`` is derived from the NUTS code prefix, which is how Eurostat
-    encodes the hierarchy (e.g. ``DE30`` -> ``DE``).
+    encodes the hierarchy (e.g. ``DE30`` -> ``DE``). ``nuts_level`` and
+    ``region_name`` come from the official NUTS 2021 classification when
+    available; a region left unnamed in a BI tool is unusable, so the names are
+    joined from GISCO rather than left null.
     """
     if nuts_codes is None or len(nuts_codes) == 0:
         return pd.DataFrame(columns=[
             "region_key", "nuts_code", "country_code", "region_level",
-            "region_name",
+            "nuts_level", "region_name",
         ])
+    index = nuts_index or {}
     codes = sorted(set(nuts_codes.dropna().astype(str)))
+
+    # Build the dimension from the union of observed codes and the official
+    # classification for the countries involved. Observed-only would omit any
+    # region a fact references at a level the dimension was not seeded with
+    # (Germany reports at NUTS 1 while the dimension is otherwise NUTS 2),
+    # leaving orphan foreign keys that break every BI join.
+    countries = {c[:2] for c in codes}
+    for code, entry in index.items():
+        if entry.get("nuts_level") in (1, 2, 3) and code[:2] in countries:
+            codes.append(code)
+    codes = sorted(set(codes))
+
     rows = []
     for code in codes:
-        prefix = code[:2]
+        entry = index.get(code) or {}
+        name = entry.get("region_name")
         rows.append({
             "nuts_code": code,
-            "country_code": prefix,
+            "country_code": code[:2],
             "region_level": level,
-            "region_name": None,  # joined from GISCO labels when available
+            "nuts_level": entry.get("nuts_level"),
+            # A region with no official name still needs a legend entry, so
+            # fall back to the code rather than leaving a blank on a map.
+            "region_name": name or code,
         })
-    return _keys(pd.DataFrame(rows), "region")
+    frame = pd.DataFrame(rows)
+    # Keep the name typed as text even when every value is null, so the column
+    # does not land in the warehouse as an integer.
+    frame["region_name"] = frame["region_name"].astype("string")
+    frame["nuts_level"] = pd.to_numeric(frame["nuts_level"], errors="coerce")
+    return _keys(frame, "region")
 
 
 def dim_age_group() -> pd.DataFrame:
@@ -199,9 +225,16 @@ def dim_date(years: range | list[int] | None = None) -> pd.DataFrame:
     years = sorted(set(int(y) for y in years))
     rows = []
     for y in years:
+        start = pd.Timestamp(f"{y}-01-01")
         rows.append({
             "year": y,
-            "year_start": pd.Timestamp(f"{y}-01-01"),
+            # Real DATE column so BI tools can build a date hierarchy and mark
+            # this as the date table. A year integer alone cannot drive
+            # year-over-year or rolling time intelligence.
+            "date": start.date(),
+            "year_start": start,
+            "year_end": pd.Timestamp(f"{y}-12-31"),
+            "quarter": f"Q{((y % 4) + 3) // 4}" if y % 4 else "Q4",
             "is_observed": y <= pd.Timestamp.now("UTC").year,
             "is_projection": y > pd.Timestamp.now("UTC").year,
             "decade": (y // 10) * 10,

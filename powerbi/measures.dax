@@ -1,0 +1,495 @@
+// Power BI DAX measure library
+// EU Healthcare Workforce Crisis Analytics & Forecasting Platform
+//
+// Companion to sql/powerbi_measures.sql, which is the reference implementation
+// of the same measures. SQL cannot express some DAX concepts (iterators,
+// format strings, time intelligence), so this file is the authoritative BI
+// version and the SQL view is the audit trail.
+//
+// Conventions
+//   - Measures are named in business language, not technical terms.
+//   - No measure averages a ratio. Ratios are recomputed from totals.
+//   - Nothing treats a reporting gap as zero. BLANK() propagates.
+//   - Facts reference dim_date[Date] as the marked date table, which is what
+//     enables the TIME INTELLIGENCE functions.
+//
+// Table names assumed:
+//   fact_healthcare_workers, fact_retirement, fact_staffing_shortage,
+//   fact_population, fact_hospital_capacity, fact_regional_workforce,
+//   dim_country, dim_profession, dim_age_group, dim_gender, dim_date, dim_region
+
+// ===========================================================================
+// PAGE 1 — Executive overview
+// ===========================================================================
+
+Total Doctors :=
+VAR LatestYear := MAX ( dim_date[year] )
+RETURN
+CALCULATE (
+    SUM ( fact_healthcare_workers[measure_value] ),
+    fact_healthcare_workers[measure] = "headcount_total",
+    fact_healthcare_workers[sex_code] = "T",
+    fact_healthcare_workers[profession_code] = "PHYS",
+    dim_date[year] = LatestYear
+)
+
+Total Nurses :=
+VAR LatestYear := MAX ( dim_date[year] )
+RETURN
+CALCULATE (
+    SUM ( fact_healthcare_workers[measure_value] ),
+    fact_healthcare_workers[measure] = "headcount_total",
+    fact_healthcare_workers[sex_code] = "T",
+    fact_healthcare_workers[profession_code] = "NURS",
+    dim_date[year] = LatestYear
+)
+
+Total Workers :=
+VAR LatestYear := MAX ( dim_date[year] )
+RETURN
+CALCULATE (
+    SUM ( fact_healthcare_workers[measure_value] ),
+    fact_healthcare_workers[measure] = "headcount_total",
+    fact_healthcare_workers[sex_code] = "T",
+    dim_date[year] = LatestYear
+)
+
+// Required workforce at the reference staffing ratio.
+// Recomputed from population rather than averaged, because averaging a
+// precomputed required figure gives every country equal weight regardless of
+// size, which understates the gap in large countries.
+Required Workers :=
+DIVIDE (
+    SUM ( fact_staffing_shortage[required_workers] ),
+    COUNTROWS ( fact_staffing_shortage )
+)
+
+// Absolute gap: required minus actual. Positive means a shortage.
+Workforce Gap :=
+SUM ( fact_staffing_shortage[shortage] )
+
+// Signed gap as a percentage of requirement. This is the headline KPI on
+// page 1: a positive value means understaffed.
+Workforce Gap % :=
+VAR Required = SUM ( fact_staffing_shortage[required_workers] )
+VAR Gap = SUM ( fact_staffing_shortage[shortage] )
+RETURN
+    DIVIDE ( Gap, Required )
+
+// Coverage index: actual as a percentage of the reference ratio. 100 means
+// exactly at the OECD benchmark.
+Staffing Sufficiency :=
+VAR Required = SUM ( fact_staffing_shortage[required_workers] )
+VAR Actual = SUM ( fact_staffing_shortage[actual_workers] )
+RETURN
+    DIVIDE ( Actual, Required )
+
+// Share of the workforce aged 55 or over. The primary retirement exposure.
+Retirement Risk % :=
+VAR TotalByAge =
+    CALCULATE (
+        SUM ( fact_healthcare_workers[measure_value] ),
+        fact_healthcare_workers[measure] = "headcount_by_age",
+        fact_healthcare_workers[sex_code] = "T"
+    )
+VAR NearRetirement =
+    CALCULATE (
+        SUM ( fact_healthcare_workers[measure_value] ),
+        fact_healthcare_workers[measure] = "headcount_by_age",
+        fact_healthcare_workers[sex_code] = "T",
+        fact_healthcare_workers[age_group_code] IN { "Y55_64", "Y_GE65" }
+    )
+RETURN
+    DIVIDE ( NearRetirement, TotalByAge )
+
+// Share aged 65 or over: the group closest to actual exit.
+Retirement Exposure 65+ :=
+VAR TotalByAge =
+    CALCULATE (
+        SUM ( fact_healthcare_workers[measure_value] ),
+        fact_healthcare_workers[measure] = "headcount_by_age",
+        fact_healthcare_workers[sex_code] = "T"
+    )
+RETURN
+    DIVIDE (
+        CALCULATE (
+            SUM ( fact_healthcare_workers[measure_value] ),
+            fact_healthcare_workers[measure] = "headcount_by_age",
+            fact_healthcare_workers[sex_code] = "T",
+            fact_healthcare_workers[age_group_code] = "Y_GE65"
+        ),
+        TotalByAge
+    )
+
+// Absolute number of workers in retirement-age bands.
+Near Retirement Workers :=
+CALCULATE (
+    SUM ( fact_healthcare_workers[measure_value] ),
+    fact_healthcare_workers[measure] = "headcount_by_age",
+    fact_healthcare_workers[sex_code] = "T",
+    fact_healthcare_workers[age_group_code] IN { "Y55_64", "Y_GE65" }
+)
+
+// ICU intensity: intensive care beds as a share of all hospital beds.
+Hospital Readiness :=
+VAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = "icu_bed" )
+VAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = "hospital_bed" )
+RETURN
+    DIVIDE ( ICU, AllBeds )
+
+Hospital Beds :=
+CALCULATE (
+    SUM ( fact_hospital_capacity[beds] ),
+    fact_hospital_capacity[category_group] = "hospital_bed"
+)
+
+ICU Beds :=
+CALCULATE (
+    SUM ( fact_hospital_capacity[beds] ),
+    fact_hospital_capacity[category_group] = "icu_bed"
+)
+
+// ===========================================================================
+// PAGE 2 — Workforce map
+// ===========================================================================
+
+// Workers per 1,000 population, computed from population rather than read from
+// a precomputed ratio so it recomputes correctly at every drill level.
+Worker to Population Ratio :=
+VAR Workers = [Total Workers]
+VAR Population =
+    CALCULATE ( SUM ( fact_population[population] ) )
+RETURN
+    DIVIDE ( Workers, Population ) * 1000
+
+// Population-weighted, so a micro-state cannot dominate an EU-wide figure.
+Population Weighted Coverage :=
+VAR WeightedCoverage =
+    SUMX (
+        SUMMARIZE ( dim_country, dim_country[country_code] ),
+        VAR Pop = CALCULATE ( SUM ( fact_population[population] ) )
+        VAR Workers =
+            CALCULATE (
+                SUM ( fact_healthcare_workers[measure_value] ),
+                fact_healthcare_workers[measure] = "headcount_total",
+                fact_healthcare_workers[sex_code] = "T"
+            )
+        RETURN
+            DIVIDE ( Workers, Pop ) * 1000 * Pop
+    )
+RETURN
+    DIVIDE ( WeightedCoverage, CALCULATE ( SUM ( fact_population[population] ) ) )
+
+// True only where the country actually reported. Use this to grey out cards
+// rather than letting a missing value read as zero.
+Physicians Reported :=
+ISBLANK (
+    CALCULATE (
+        SUM ( fact_healthcare_workers[measure_value] ),
+        fact_healthcare_workers[measure] = "headcount_total",
+        fact_healthcare_workers[sex_code] = "T",
+        fact_healthcare_workers[profession_code] = "PHYS"
+    )
+) = FALSE
+
+Nurses Reported :=
+ISBLANK (
+    CALCULATE (
+        SUM ( fact_healthcare_workers[measure_value] ),
+        fact_healthcare_workers[measure] = "headcount_total",
+        fact_healthcare_workers[sex_code] = "T",
+        fact_healthcare_workers[profession_code] = "NURS"
+    )
+) = FALSE
+
+// Countries in scope for the current visual. Six member states publish no
+// nurse data at all; counting them would understate EU coverage.
+Countries Reporting Nurses :=
+VAR Unreported =
+    CALCULATETABLE (
+        VALUES ( dim_country[country_code] ),
+        FILTER (
+            VALUES ( dim_country[country_code] ),
+            ISBLANK (
+                CALCULATE (
+                    SUM ( fact_healthcare_workers[measure_value] ),
+                    fact_healthcare_workers[measure] = "headcount_total",
+                    fact_healthcare_workers[sex_code] = "T",
+                    fact_healthcare_workers[profession_code] = "NURS"
+                )
+            )
+        )
+    )
+RETURN
+    COUNTROWS ( dim_country ) - COUNTROWS ( Unreported )
+
+// ===========================================================================
+// PAGE 3 / 4 — Shortage by profession
+// ===========================================================================
+
+// Rank within the current selection. DENSE_RANK keeps ties on the same step so
+// a tie at rank 2 is followed by rank 2 again rather than rank 4.
+Shortage Severity Rank :=
+VAR Shortage = [Workforce Gap]
+RETURN
+    IF (
+        NOT ISBLANK ( Shortage ),
+        RANKX (
+            ALLSELECTED ( dim_country[country_code] ),
+            CALCULATE ( [Workforce Gap] ),
+            ,
+            DESC,
+            DENSE
+        )
+    )
+
+// Year-over-year change in the gap. Negative means the position improved.
+Gap YoY Change :=
+VAR Current = [Workforce Gap]
+VAR Prior =
+    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )
+RETURN
+    Current - Prior
+
+// Three-year rolling mean of the gap, so one unusual year does not read as a
+// trend. Uses the date table, not a row-wise window.
+Gap Rolling 3Y :=
+VAR CurrentGap = [Workforce Gap]
+VAR Window =
+    DATESINPERIOD ( dim_date[Date], MAX ( dim_date[Date] ), -3, YEAR )
+RETURN
+    AVERAGEX (
+        Window,
+        CALCULATE ( [Workforce Gap] )
+    )
+
+// Countries whose coverage index is deteriorating year on year.
+Deteriorating Countries :=
+VAR PriorYear = CALCULATE ( MAX ( dim_date[year] ), DATEADD ( dim_date[Date], -1, YEAR ) )
+VAR CurrentYear = MAX ( dim_date[year] )
+VAR Deteriorated =
+    FILTER (
+        ALL ( dim_country[country_code] ),
+        VAR C = [Staffing Sufficiency]
+        VAR P =
+            CALCULATE (
+                [Staffing Sufficiency],
+                dim_country[country_code] = dim_country[country_code],
+                dim_date[year] = PriorYear
+            )
+        RETURN
+            NOT ISBLANK ( C ) && NOT ISBLANK ( P ) && C < P
+    )
+RETURN
+    COUNTROWS ( Deteriorated )
+
+// ===========================================================================
+// PAGE 5 — Workforce aging
+// ===========================================================================
+
+// Workforce aging index: share aged 55+, with a rolling mean for trend.
+Workforce Aging Index :=
+RETURNFILTERVALUES ( dim_age_group, RETURNSUBSTITUTE ( [Retirement Risk %] ) )
+
+// Relative position against the EU average, useful for a conditional-format
+// card without hard-coding a benchmark per country.
+Aging vs EU Average :=
+VAR Mine = [Retirement Risk %]
+VAR EUMean = CALCULATE ( [Retirement Risk %], ALL ( dim_country ) )
+RETURN
+    DIVIDE ( Mine - EUMean, EUMean )
+
+// Replacement demand: workers in retirement bands as an absolute headcount.
+Replacement Demand :=
+[Near Retirement Workers]
+
+// ===========================================================================
+// PAGE 6 — Hospital capacity
+// ===========================================================================
+
+// Composite operational risk, 0-100, higher is worse.
+// Three components weighted by their operational weight:
+//   workforce pressure (40%), ICU scarcity (35%), retirement exposure (25%).
+// The ratio is rescaled to 0-100 so it is comparable across pages.
+Hospital Risk Score :=
+VAR BedsPerNurse =
+    DIVIDE (
+        [Hospital Beds],
+        CALCULATE (
+            SUM ( fact_healthcare_workers[measure_value] ),
+            fact_healthcare_workers[measure] = "headcount_total",
+            fact_healthcare_workers[sex_code] = "T",
+            fact_healthcare_workers[profession_code] = "NURS"
+        )
+    )
+VAR ReferenceBedsPerNurse = 0.8
+VAR WorkforcePressure =
+    MIN ( 1, DIVIDE ( ReferenceBedsPerNurse, BedsPerNurse ) )
+VAR ICUScarcity =
+    MIN ( 1, DIVIDE ( 0.04, [Hospital Readiness] ) )
+VAR RetirementPressure = MIN ( 1, [Retirement Risk %] / 0.6 )
+RETURN
+    ROUND (
+        ( WorkforcePressure * 0.40 + ICUScarcity * 0.35 + RetirementPressure * 0.25 )
+        * 100,
+        1
+    )
+
+// Discrete tier so the score is actionable rather than a continuous number
+// nobody can act on.
+Hospital Risk Tier :=
+VAR Score = [Hospital Risk Score]
+RETURN
+    SWITCH (
+        TRUE (),
+        ISBLANK ( Score ), "Unknown",
+        Score >= 75, "Critical",
+        Score >= 50, "High",
+        Score >= 25, "Medium",
+        "Low"
+    )
+
+// ===========================================================================
+// PAGE 7 — Medical desert detection
+// ===========================================================================
+
+// Regional workers per 1,000 population. This is OBSERVED regional data
+// (fact_regional_workforce is verified against national totals), but only for
+// the 12 countries and years that reconcile. BLANK() where nothing was
+// reported, never 0.
+Regional Coverage :=
+VAR Workers =
+    CALCULATE ( SUM ( fact_regional_workforce[measure_value] ) )
+VAR Population =
+    CALCULATE (
+        SUM ( fact_population_nuts[population] ),
+        fact_population_nuts[age_group_code] IS BLANK (),
+        fact_population_nuts[sex_code] = "T"
+    )
+RETURN
+    DIVIDE ( Workers, Population ) * 1000
+
+// Medical desert score: combines low density with a small population base,
+// because a thinly served region of 20,000 people is a different problem from
+// the same density in a region of 2 million.
+Medical Desert Score :=
+VAR Coverage = [Regional Coverage]
+VAR Population =
+    CALCULATE (
+        SUM ( fact_population_nuts[population] ),
+        fact_population_nuts[age_group_code] IS BLANK (),
+        fact_population_nuts[sex_code] = "T"
+    )
+VAR DensityPenalty = MIN ( 1, DIVIDE ( 50000, Population ) )
+RETURN
+    IF (
+        ISBLANK ( Coverage ),
+        BLANK (),
+        ROUND ( MIN ( 100, DIVIDE ( 12, Coverage ) * 70 + DensityPenalty * 30 ), 1 )
+    )
+
+// Four action tiers, cut on the observed distribution.
+Medical Desert Tier :=
+VAR Score = [Medical Desert Score]
+RETURN
+    SWITCH (
+        TRUE (),
+        ISBLANK ( Score ), "Unknown",
+        Score >= 70, "Critical",
+        Score >= 45, "High",
+        Score >= 25, "Medium",
+        "Low"
+    )
+
+// Regions in a critical desert, for the priority-funding page.
+Critical Desert Regions :=
+VAR Critical =
+    FILTER (
+        ALL ( dim_region[nuts_code] ),
+        VAR Tier = CALCULATE ( [Medical Desert Tier] )
+        RETURN Tier = "Critical"
+    )
+RETURN
+    COUNTROWS ( Critical )
+
+// Population affected: the number of people living in critical regions.
+// This is the equity figure for a funding decision.
+Population In Deserts :=
+VAR Deserts =
+    FILTER (
+        ALL ( dim_region[nuts_code] ),
+        VAR Tier = CALCULATE ( [Medical Desert Tier] )
+        RETURN Tier = "Critical" || Tier = "High"
+    )
+RETURN
+    CALCULATE (
+        SUM ( fact_population_nuts[population] ),
+        fact_population_nuts[age_group_code] IS BLANK (),
+        fact_population_nuts[sex_code] = "T",
+        KEEPFILTERS ( Deserts )
+    )
+
+// ===========================================================================
+// PAGE 8 — Forecasting
+// ===========================================================================
+
+// Forecasted shortage: forecast workers less the requirement implied by
+// projected population. Positive means a projected shortage in 2030.
+Forecasted Gap :=
+VAR Forecast = [Forecast Workers]
+VAR Required = CALCULATE ( [Required Workers] )
+RETURN
+    Forecast - Required
+
+// Model uplift over the naive baseline, so a reader can see whether the model
+// adds anything or is just carrying the last observed value forward.
+Model Uplift :=
+VAR F = [Forecast Workers]
+VAR B = [Baseline Forecast]
+RETURN
+    F - B
+
+// Direction of travel in the forecast horizon.
+Forecast Direction :=
+VAR Change = [Forecast Change %]
+RETURN
+    SWITCH ( TRUE (), ISBLANK ( Change ), "Unknown", Change > 1, "Growing",
+            Change < -1, "Shrinking", "Stable" )
+
+// ===========================================================================
+// Executive KPI panel — one measure per KPI on the summary page
+// ===========================================================================
+
+Coverage Index := [Staffing Sufficiency]
+Future Capacity := [Total Workers] + [Forecast Workers] - [Total Workers]
+Healthcare Equity :=
+VAR Spread =
+    CALCULATE (
+        MAXX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] )
+        - MINX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] ),
+        ALL ( dim_country )
+    )
+RETURN
+    DIVIDE ( 1, 1 + Spread )
+Regional Risk := [Hospital Risk Score]
+Recruitment Efficiency :=
+VAR CurrentGap = [Workforce Gap]
+VAR PriorGap =
+    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )
+RETURN
+    DIVIDE ( PriorGap - CurrentGap, ABS ( PriorGap ) )
+Healthcare Access Score := [Regional Coverage]
+
+// ===========================================================================
+// Formatting
+// ===========================================================================
+
+// Applied in Model view:
+//   Percentage measures            -> format "0.0%"
+//   Large counts                   -> format "#,0"
+//   Ratios per 1,000               -> format "0.00"
+//   Risk scores                    -> format "0.0"
+//
+// Two format strings worth stating explicitly because they are commonly wrong:
+//   [Hospital Risk Score]          -> "0.0"  and NOT a percentage, it is 0-100
+//   [Coverage Index]               -> "0.0%" because it is actual/required

@@ -29,6 +29,69 @@ from warehouse.dims import (
     ICU_FACILITY,
 )
 
+#: Declared relationship model. A BI tool infers relationships from column
+#: names and usually guesses wrong on a fact table, so the model is stated here
+#: and exported to docs/RELATIONSHIPS.md. Cardinality is many-to-one from each
+#: fact to every dimension; ``dim_date`` is the many-to-one date table.
+RELATIONSHIPS = [
+    # (from_table, from_column, to_table, to_column, cardinality, active)
+    ("fact_healthcare_workers", "country_code", "dim_country",
+     "country_code", "many-to-one", True),
+    ("fact_healthcare_workers", "profession_code", "dim_profession",
+     "profession_code", "many-to-one", True),
+    ("fact_healthcare_workers", "age_group_code", "dim_age_group",
+     "age_group_code", "many-to-one", False),
+    ("fact_healthcare_workers", "sex_code", "dim_gender",
+     "sex_code", "many-to-one", False),
+    ("fact_healthcare_workers", "year", "dim_date",
+     "year", "many-to-one", False),
+    ("fact_retirement", "country_code", "dim_country",
+     "country_code", "many-to-one", True),
+    ("fact_retirement", "profession_code", "dim_profession",
+     "profession_code", "many-to-one", True),
+    ("fact_retirement", "age_group_code", "dim_age_group",
+     "age_group_code", "many-to-one", False),
+    ("fact_retirement", "year", "dim_date", "year", "many-to-one", False),
+    ("fact_staffing_shortage", "country_code", "dim_country",
+     "country_code", "many-to-one", True),
+    ("fact_staffing_shortage", "profession_code", "dim_profession",
+     "profession_code", "many-to-one", True),
+    ("fact_staffing_shortage", "year", "dim_date",
+     "year", "many-to-one", False),
+    ("fact_population", "country_code", "dim_country",
+     "country_code", "many-to-one", True),
+    ("fact_population", "sex_code", "dim_gender",
+     "sex_code", "many-to-one", False),
+    ("fact_population", "year", "dim_date", "year", "many-to-one", False),
+    ("fact_population_nuts", "nuts_code", "dim_region",
+     "nuts_code", "many-to-one", True),
+    ("fact_population_nuts", "age_group_code", "dim_age_group",
+     "age_group_code", "many-to-one", False),
+    ("fact_population_nuts", "sex_code", "dim_gender",
+     "sex_code", "many-to-one", False),
+    ("fact_population_nuts", "year", "dim_date", "year", "many-to-one", False),
+    # fact_regional_workforce intentionally does NOT relate to dim_region on
+    # nuts_code. Countries report at a different NUTS level than the regional
+    # population table uses (Germany at NUTS 1, the Netherlands at NUTS 2), so
+    # a nuts_code-to-nuts_code join drops most regions. The correct key is
+    # country_code, with the NUTS level recorded as an attribute for display.
+    ("fact_regional_workforce", "country_code", "dim_country",
+     "country_code", "many-to-one", True),
+    ("fact_regional_workforce", "profession_code", "dim_profession",
+     "profession_code", "many-to-one", True),
+    ("fact_regional_workforce", "year", "dim_date",
+     "year", "many-to-one", False),
+    ("fact_hospital_capacity", "country_code", "dim_country",
+     "country_code", "many-to-one", True),
+    ("fact_hospital_capacity", "year", "dim_date", "year", "many-to-one", False),
+    ("fact_population_indicators", "country_code", "dim_country",
+     "country_code", "many-to-one", True),
+    ("fact_population_indicators", "sex_code", "dim_gender",
+     "sex_code", "many-to-one", False),
+    ("fact_population_indicators", "year", "dim_date",
+     "year", "many-to-one", False),
+]
+
 GRAIN = {
     "fact_healthcare_workers":
         "profession x age_group x sex x country x year",

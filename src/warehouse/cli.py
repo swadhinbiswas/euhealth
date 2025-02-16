@@ -82,7 +82,13 @@ def build(report_only: bool = False) -> dict:
     dimensions = {
         name: fn() for name, fn in ALL_DIMENSIONS.items()
     }
-    dimensions["dim_region"] = dim_region(nuts_codes, "NUTS2")
+    # Region names and true NUTS levels come from the official GISCO
+    # classification; without them the region dimension is a list of codes.
+    nuts_index = {}
+    index_path = ROOT / "data" / "geo" / "nuts_level_index.json"
+    if index_path.exists():
+        nuts_index = json.loads(index_path.read_text())
+    dimensions["dim_region"] = dim_region(nuts_codes, "NUTS2", nuts_index)
     dimensions["dim_date"] = dim_date(range(2000, 2036))
 
     # --- facts ---------------------------------------------------------------

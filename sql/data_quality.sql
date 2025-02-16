@@ -1,14 +1,5 @@
--- Availability and integrity of the analytical measures.
 --
--- A country that stops reporting is NOT the same as a country that reports
--- zero. Germany publishes hospital beds through 2019 and nothing after; joining
--- naively yields beds = 0, which reads on a dashboard as "Germany closed every
--- hospital". These views separate missing from zero so no consumer can confuse
--- the two.
 
--- ---------------------------------------------------------------------------
--- Which profession/country/year combinations actually have a headcount?
--- ---------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_measure_availability AS
 SELECT profession_code,
        country_code,
@@ -18,9 +9,6 @@ SELECT profession_code,
 FROM fact_healthcare_workers
 WHERE measure = 'headcount_total' AND sex_code = 'T';
 
--- ---------------------------------------------------------------------------
--- Coverage gaps: countries expected but absent from each fact.
--- ---------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_data_gaps AS
 SELECT 'nurses' AS domain,
        d.country_code,
@@ -41,9 +29,6 @@ WHERE NOT EXISTS (
       AND b.category_group = 'hospital_bed'
 );
 
--- ---------------------------------------------------------------------------
--- Series that stop part-way: latest year present vs the global maximum.
--- ---------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_series_endpoints AS
 SELECT country_code,
        profession_code,
@@ -56,10 +41,6 @@ FROM fact_healthcare_workers
 WHERE measure = 'headcount_total' AND sex_code = 'T'
 GROUP BY country_code, profession_code;
 
--- ---------------------------------------------------------------------------
--- Safe coverage index: NULL rather than 0 where a country has not reported.
--- A NULL propagates through the KPI; a 0 would silently rank worst.
--- ---------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_coverage_index_safe AS
 SELECT v.country_code,
        v.country_name,
@@ -67,8 +48,6 @@ SELECT v.country_code,
        v.physicians,
        v.nurses,
        v.population,
-       -- NULL, never 0, when a country did not report. A country that did not
-       -- report is not a country with no workforce.
        CASE WHEN COALESCE(v.nurses, 0) > 0 AND COALESCE(v.population, 0) > 0
             THEN v.nurses / v.population * 1000
        END AS nurses_per_1000,

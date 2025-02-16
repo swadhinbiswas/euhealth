@@ -1,11 +1,13 @@
-.PHONY: help setup ingest warehouse regional forecast test lint fmt check all clean
+.PHONY: help setup ingest geo warehouse regional forecast views test lint fmt check all clean
 
 PY := .venv/bin/python
 
 help:
 	@echo "setup      install dev dependencies into .venv (python 3.12)"
 	@echo "ingest     pull Eurostat into data/raw (idempotent, cached)"
+	@echo "geo        install NUTS 2021 boundaries for map visuals"
 	@echo "warehouse  quality gate + build gold star schema into DuckDB"
+	@echo "views      rebuild every SQL view (semantic layer)"
 	@echo "regional   build observed NUTS workforce (level-harmonised)"
 	@echo "forecast   run 7 model families with walk-forward validation"
 	@echo "test       run the test suite"
@@ -21,6 +23,9 @@ setup:
 ingest:
 	$(PY) scripts/ingest_all.py
 
+geo:
+	$(PY) scripts/install_geo.py
+
 warehouse:
 	PYTHONPATH=src $(PY) -m src.warehouse.cli
 
@@ -29,6 +34,9 @@ regional:
 
 forecast:
 	PYTHONPATH=src $(PY) -m src.ml.cli
+
+views:
+	$(PY) scripts/build_views.py
 
 test:
 	PYTHONPATH=src $(PY) -m pytest -q
@@ -41,7 +49,7 @@ fmt:
 
 check: lint test
 
-all: ingest warehouse regional forecast check
+all: ingest geo warehouse regional forecast views check
 
 clean:
 	rm -rf .pytest_cache .ruff_cache src/__pycache__ src/*/__pycache__ \

@@ -9,12 +9,23 @@ figures appear in any result.
 
 ```bash
 make setup      # create the environment
+make all        # full pipeline, in order, then lint + tests
+```
+
+Or step by step:
+
+```bash
 make ingest     # pull Eurostat into the raw landing zone  (~4 min cold)
+make geo        # install NUTS 2021 boundaries for map visuals
 make warehouse  # quality gate + star schema into DuckDB
 make regional   # observed NUTS-level workforce, level-harmonised
 make forecast   # 7 model families, walk-forward validated
-make test       # 168 tests
+make views      # build all 22 semantic views (fails loudly if any is broken)
+make test       # 239 tests
 ```
+
+**To load into Power BI:** connect to `data/healthcare_dw.duckdb`, or publish
+Parquet exports. Full instructions in [`docs/POWERBI.md`](docs/POWERBI.md).
 
 ## What the data actually says
 
@@ -119,9 +130,12 @@ Stated up front rather than buried.
    discontinued (4,063 values in 2014 → 54 in 2021) and keyed by occupation, not
    age or sex. After level harmonisation and reconciliation only 12 countries
    and 2,240 verified rows remain, 100% reconciled; 54% of physician and 12% of nurse
-   country-years reconcile between the two Eurostat tables.
-2. **No `.pbix` binary** is generated. Deliverable is the SQL, DAX library and
-   page specifications.
+   country-years reconcile between the two Eurostat tables. Regional rates are
+   indicative rather than same-year, because the denominator is a 2023 snapshot.
+2. **No `.pbix` binary** is generated — the format cannot be written from the
+   command line. `powerbi/measures.dax` (42 measures) plus `docs/POWERBI.md`
+   (relationship model, 8 page specs, formatting, accessibility) is the
+   deliverable.
 3. **EURES has no public API**, so `fact_job_vacancies` is built from labour
    market, training-origin and graduation proxies, flagged `data_basis`.
 4. **OECD SDMX and several national portals were unreachable** from the build
@@ -139,9 +153,11 @@ src/warehouse/   dimensions, facts, DuckDB build CLI
 src/quality/     data quality framework
 src/ml/          7 forecast models, walk-forward evaluation
 src/geo/         NUTS level harmonisation, regional CLI
-sql/             analytical views and integrity views
-docs/            plan, findings, forecasting, regional
-tests/           168 tests
+sql/             22 semantic views (analytics, integrity, Power BI measures)
+powerbi/         42 DAX measures + semantic-layer README
+scripts/         ingest, view build, geography install
+docs/            plan, findings, forecasting, regional, PowerBI
+tests/           239 tests
 ```
 
 `src/ingestion/registry.py` records every dataset's verified dimensions, plus a
