@@ -27,6 +27,34 @@ make test       # 239 tests
 **To load into Power BI:** connect to `data/healthcare_dw.duckdb`, or publish
 Parquet exports. Full instructions in [`docs/POWERBI.md`](docs/POWERBI.md).
 
+## Dashboard
+
+A static dashboard generated from the warehouse by `make site`. Every figure
+below is a real capture of the rendered page — no mockups.
+
+![Executive overview, doctor coverage by country, retirement exposure and the workforce age pyramid](docs/images/dashboard-light.png)
+
+**Coverage** — physicians per 1,000 population by country, ranked lowest, with
+the OECD reference ratio marked. **Retirement exposure** — share of physicians
+aged 55+, shaded above 50%. **Age pyramid** — physician age distribution by sex
+for Germany, showing the width of the retirement pipeline against entrants.
+**Medical deserts** — observed regional coverage, every region reconciled to its
+national total before publication.
+
+Dark mode and mobile are supported and are checked in CI-grade detail:
+
+| Dark mode | Mobile (390px) |
+|---|---|
+| ![Dark mode](docs/images/dashboard-dark.png) | ![Mobile](docs/images/dashboard-mobile.png) |
+
+The page carries its own caveat block, which is the part that keeps it honest:
+six countries with no nurse data, 12 verified regional countries ending ~2015,
+and the finding that every tree-based model lost to the naive baseline.
+
+Deploy it as static files — no build step, no server. GitHub Pages works via the
+included workflow; Cloudflare Pages via `wrangler pages deploy site`. See
+[`docs/DEPLOY.md`](docs/DEPLOY.md).
+
 ## What the data actually says
 
 | Question | Answer (live Eurostat, 2020 unless noted) |
@@ -153,10 +181,12 @@ src/warehouse/   dimensions, facts, DuckDB build CLI
 src/quality/     data quality framework
 src/ml/          7 forecast models, walk-forward evaluation
 src/geo/         NUTS level harmonisation, regional CLI
+src/dashboard/   warehouse -> JSON export for the static site
 sql/             22 semantic views (analytics, integrity, Power BI measures)
 powerbi/         42 DAX measures + semantic-layer README
-scripts/         ingest, view build, geography install
-docs/            plan, findings, forecasting, regional, PowerBI
+site/            static dashboard (generated)
+scripts/         ingest, views, geography, site build, screenshots
+docs/            plan, findings, forecasting, regional, PowerBI, deploy
 tests/           239 tests
 ```
 

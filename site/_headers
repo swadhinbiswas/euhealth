@@ -1,0 +1,14 @@
+# Static asset caching. Fingerprinted filenames are not used here, so assets
+# get a short max-age and the HTML gets none, keeping a redeploy visible.
+/assets/*
+  Cache-Control: public, max-age=3600
+
+/index.html
+  Cache-Control: no-cache
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY

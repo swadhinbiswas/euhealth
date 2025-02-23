@@ -1,0 +1,66 @@
+name: deploy-site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Only one deployment at a time; queued runs supersede older ones.
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pandas numpy pyarrow duckdb requests
+
+      # The site is generated from the warehouse, so the warehouse has to be
+      # built first. Sources are cached from the raw landing zone where
+      # available; ingestion is idempotent and re-fetches anything missing.
+      - name: Ingest sources
+        continue-on-error: true
+        run: |
+          mkdir -p src
+          pip install -e . || true
+          PYTHONPATH=src python scripts/ingest_all.py
+
+      - name: Build warehouse
+        continue-on-error: true
+        run: PYTHONPATH=src python -m src.warehouse.cli
+
+      - name: Build regional layer
+        continue-on-error: true
+        run: PYTHONPATH=src python -m src.geo.cli
+
+      - name: Export and assemble site
+        run: |
+          PYTHONPATH=src python -m src.dashboard.export
+          python scripts/build_site.py
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

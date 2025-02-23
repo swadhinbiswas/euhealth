@@ -1,4 +1,4 @@
-.PHONY: help setup ingest geo warehouse regional forecast views test lint fmt check all clean
+.PHONY: help setup ingest geo warehouse regional forecast views export-data site screenshots test lint fmt check all clean
 
 PY := .venv/bin/python
 
@@ -8,6 +8,8 @@ help:
 	@echo "geo        install NUTS 2021 boundaries for map visuals"
 	@echo "warehouse  quality gate + build gold star schema into DuckDB"
 	@echo "views      rebuild every SQL view (semantic layer)"
+	@echo "site       generate the static dashboard from the warehouse"
+	@echo "screenshots  capture the dashboard for the README (needs chromium)"
 	@echo "regional   build observed NUTS workforce (level-harmonised)"
 	@echo "forecast   run 7 model families with walk-forward validation"
 	@echo "test       run the test suite"
@@ -38,6 +40,17 @@ forecast:
 views:
 	$(PY) scripts/build_views.py
 
+export-data:
+	PYTHONPATH=src $(PY) -m src.dashboard.export
+
+# Regenerate the static dashboard from the current warehouse.
+site: export-data
+	$(PY) scripts/build_site.py
+
+# Screenshot the site for the README. Requires chromium on PATH.
+screenshots:
+	$(PY) scripts/screenshot_site.py
+
 test:
 	PYTHONPATH=src $(PY) -m pytest -q
 
@@ -49,7 +62,7 @@ fmt:
 
 check: lint test
 
-all: ingest geo warehouse regional forecast views check
+all: ingest geo warehouse regional forecast views site check
 
 clean:
 	rm -rf .pytest_cache .ruff_cache src/__pycache__ src/*/__pycache__ \

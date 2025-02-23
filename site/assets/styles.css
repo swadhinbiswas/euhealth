@@ -1,0 +1,268 @@
+/* ==========================================================================
+   EU Healthcare Workforce — static dashboard
+   Consulting palette (McKinsey / Deloitte register), light and dark.
+   No framework, no CDN: one file, deployable anywhere.
+   ========================================================================== */
+
+:root {
+  --ink: #14181f;
+  --ink-2: #4a5261;
+  --ink-3: #7b8496;
+  --surface: #ffffff;
+  --surface-2: #f6f7f9;
+  --surface-3: #eceef2;
+  --line: #dfe3ea;
+  --accent: #1f4e79;
+  --accent-2: #2d7d9a;
+
+  /* Sequential ramp for risk tiers. Lightness varies monotonically so the
+     encoding survives greyscale and colour-vision deficiency. */
+  --risk-critical: #a4243b;
+  --risk-high: #d1603d;
+  --risk-medium: #e8b04b;
+  --risk-low: #4e8c6d;
+
+  --good: #2d7d5f;
+  --warn: #c8860d;
+  --radius: 3px;
+  --shadow: 0 1px 2px rgba(20, 24, 31, .06), 0 4px 12px rgba(20, 24, 31, .05);
+}
+
+[data-theme="dark"] {
+  --ink: #eef1f6;
+  --ink-2: #b3bccb;
+  --ink-3: #7f8a9c;
+  --surface: #141922;
+  --surface-2: #1b2130;
+  --surface-3: #232b3b;
+  --line: #2c3547;
+  --accent: #6fa8dc;
+  --accent-2: #5bc0de;
+  --risk-critical: #e2707f;
+  --risk-high: #ef9464;
+  --risk-medium: #f2cd74;
+  --risk-low: #7fc0a0;
+  --good: #6cc39a;
+  --warn: #e3b341;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 4px 14px rgba(0, 0, 0, .3);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--surface-2);
+  color: var(--ink);
+  font: 400 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 64px; }
+
+/* --- header --------------------------------------------------------------- */
+header.masthead {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 24px; padding-bottom: 18px; margin-bottom: 26px;
+  border-bottom: 2px solid var(--ink);
+}
+.eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px;
+}
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 6px; letter-spacing: -.01em; }
+.sub { font-size: 14px; color: var(--ink-2); margin: 0; max-width: 62ch; }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+
+button.theme {
+  font: inherit; font-size: 13px; cursor: pointer;
+  padding: 7px 14px; border-radius: var(--radius);
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink);
+}
+button.theme:hover { border-color: var(--ink-3); }
+button.theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* --- nav ------------------------------------------------------------------ */
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 30px; }
+nav.toc a {
+  font-size: 13px; text-decoration: none; color: var(--ink-2);
+  padding: 6px 12px; border: 1px solid var(--line);
+  border-radius: var(--radius); background: var(--surface);
+}
+nav.toc a:hover, nav.toc a:focus-visible {
+  color: var(--ink); border-color: var(--ink-3);
+}
+nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* --- panels --------------------------------------------------------------- */
+section { margin-bottom: 34px; scroll-margin-top: 20px; }
+section > h2 {
+  font-size: 15px; font-weight: 600; letter-spacing: .01em;
+  margin: 0 0 4px; padding-bottom: 8px; border-bottom: 1px solid var(--line);
+}
+section > p.note { font-size: 13px; color: var(--ink-3); margin: 0 0 16px; }
+
+.panel {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* --- KPI tiles ------------------------------------------------------------ */
+.kpi { padding: 16px 18px; }
+.kpi .label {
+  font-size: 11px; font-weight: 600; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
+}
+.kpi .value {
+  font-size: 27px; font-weight: 600; letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums; line-height: 1.15;
+}
+.kpi .unit { font-size: 13px; font-weight: 400; color: var(--ink-3); }
+.kpi .foot { font-size: 12px; color: var(--ink-3); margin-top: 7px; }
+.kpi .foot.good { color: var(--good); }
+.kpi .foot.warn { color: var(--warn); }
+
+/* --- tables --------------------------------------------------------------- */
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+/* Panel caption sits outside the <table> so it cannot inherit table layout
+   and collapse into a single malformed row. */
+.panel-caption {
+  font-size: 12.5px; color: var(--ink-2); padding: 13px 18px 11px;
+  font-weight: 500; line-height: 1.45;
+}
+th, td {
+  padding: 8px 18px; text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+thead th {
+  font-size: 11px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-3);
+  border-bottom: 1px solid var(--line); position: sticky; top: 0;
+  background: var(--surface);
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--surface-2); }
+td.num, th.num {
+  text-align: right; font-variant-numeric: tabular-nums;
+}
+.scroll { max-height: 340px; overflow-y: auto; }
+
+/* --- bars (CSS only, no charting library) --------------------------------- */
+.bar-row {
+  display: grid; grid-template-columns: 148px 1fr 78px;
+  align-items: center; gap: 12px; padding: 7px 18px;
+}
+.bar-row .name { font-size: 13.5px; }
+.bar-track {
+  height: 15px; background: var(--surface-3);
+  border-radius: 2px; overflow: hidden; position: relative;
+}
+.bar-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+.bar-fill.pos { background: var(--risk-critical); }
+.bar-fill.neg { background: var(--risk-low); }
+.bar-row .val {
+  font-size: 13px; text-align: right;
+  font-variant-numeric: tabular-nums; color: var(--ink-2);
+}
+.bar-row.missing .val { color: var(--ink-3); font-style: italic; }
+
+/* --- reference marker ----------------------------------------------------- */
+.marker {
+  position: absolute; top: -3px; bottom: -3px; width: 2px;
+  background: var(--ink); opacity: .55;
+}
+
+/* --- tiers ---------------------------------------------------------------- */
+.tier {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  letter-spacing: .04em; padding: 2px 8px; border-radius: 2px;
+  color: #fff; white-space: nowrap;
+}
+.tier-Critical { background: var(--risk-critical); }
+.tier-High { background: var(--risk-high); color: #2a1a12; }
+.tier-Medium { background: var(--risk-medium); color: #2a2312; }
+.tier-Low { background: var(--risk-low); }
+.tier-Unknown { background: var(--ink-3); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px;
+          color: var(--ink-2); padding: 0 18px 14px; }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.swatch { width: 11px; height: 11px; border-radius: 2px; }
+
+/* --- pyramid -------------------------------------------------------------- */
+.pyramid { padding: 8px 18px 16px; }
+.pyr-row {
+  display: grid; grid-template-columns: 72px 1fr 116px 1fr 72px;
+  align-items: center; gap: 8px; padding: 3px 0;
+}
+.pyr-row .side { display: flex; height: 20px; }
+.pyr-row .left { justify-content: flex-end; }
+/* Male grows leftward from the centre column; female grows rightward. */
+.pyr-left { background: var(--accent-2); border-radius: 2px 0 0 2px; }
+.pyr-right { background: var(--accent); border-radius: 0 2px 2px 0; }
+.pyr-label {
+  font-size: 11.5px; color: var(--ink-2); text-align: center;
+  white-space: nowrap;
+}
+.pyr-val {
+  font-size: 12px; text-align: right; font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.pyr-legend {
+  font-size: 12px; color: var(--ink-2); padding: 8px 0 0;
+  display: flex; gap: 16px; align-items: center;
+}
+
+/* --- inline SVG chart ----------------------------------------------------- */
+.chart { padding: 14px 18px 8px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.axis-label { font-size: 10.5px; fill: var(--ink-3); }
+.grid-line { stroke: var(--line); stroke-width: 1; }
+.axis-line { stroke: var(--ink-3); stroke-width: 1; }
+.series-line { fill: none; stroke-width: 2; }
+.series-dot { stroke: var(--surface); stroke-width: 1.5; }
+
+/* --- caveats -------------------------------------------------------------- */
+.caveat {
+  border-left: 3px solid var(--risk-high);
+  background: var(--surface-2); padding: 11px 15px; margin: 14px 0 0;
+  font-size: 13px; color: var(--ink-2); border-radius: 0 var(--radius)
+  var(--radius) 0;
+}
+.caveat strong { color: var(--ink); font-weight: 600; }
+.caveats { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line); }
+.caveats h2 { font-size: 15px; margin: 0 0 10px; font-weight: 600; }
+.caveats ul { margin: 0; padding-left: 20px; font-size: 13px; color: var(--ink-2); }
+.caveats li { margin-bottom: 6px; }
+
+footer {
+  margin-top: 34px; padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 12.5px; color: var(--ink-3);
+}
+footer a { color: var(--ink-2); }
+
+.vh {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g3, .g2 { grid-template-columns: 1fr; }
+  header.masthead { flex-direction: column; }
+  .bar-row { grid-template-columns: 110px 1fr 66px; }
+  .pyr-row { grid-template-columns: 58px 1fr 84px 1fr 58px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bar-fill { transition: width .5s ease; }
+}
+@media print {
+  body { background: #fff; }
+  button.theme, nav.toc { display: none; }
+  section { break-inside: avoid; }
+}

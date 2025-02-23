@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EU Healthcare Workforce — Crisis Analytics</title>
+<meta name="description" content="Observed EU health-workforce supply, retirement
+exposure and forecast comparison, built from live Eurostat data.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Data Engineering · Analytics · Forecasting</p>
+      <h1>EU Healthcare Workforce Crisis Analytics</h1>
+      <p class="sub">Supply, retirement exposure, regional inequity and
+        multi-horizon forecasting across the 27 member states. Every figure is
+        read from a verified dimensional warehouse built on live Eurostat data.</p>
+    </div>
+    <div class="toolbar">
+      <button class="theme" id="theme-toggle" type="button">Dark mode</button>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#overview">Executive overview</a>
+    <a href="#coverage">Doctor coverage</a>
+    <a href="#retirement">Retirement exposure</a>
+    <a href="#pyramid">Workforce aging</a>
+    <a href="#deserts">Medical deserts</a>
+    <a href="#forecast">Forecasting</a>
+    <a href="#quality">Data quality</a>
+  </nav>
+
+  <section id="overview">
+    <h2>Executive overview</h2>
+    <p class="note">National reporting totals. Ratios use the OECD reference of
+      3.3 physicians per 1,000 population. Years differ by indicator because
+      Eurostat reporting lags: coverage is anchored on the most recent year
+      with a complete population denominator, not simply the newest headcount.</p>
+    <div class="grid g4" id="kpis"></div>
+  </section>
+
+  <section id="coverage">
+    <h2>Doctor coverage by country</h2>
+    <p class="note">Physicians per 1,000 population, ranked lowest first. The
+      marker is the OECD reference ratio of 3.3. No country sits below it in
+      2024, but the spread across the EU is twofold, from 3.35 to 6.74 per
+      1,000.</p>
+    <div id="coverage-chart"></div>
+  </section>
+
+  <section id="retirement">
+    <h2>Retirement exposure</h2>
+    <p class="note">Share of physicians aged 55 or over. A country above 50% is
+      carrying more retirement risk than replacement capacity in the same
+      decade.</p>
+    <div id="retirement"></div>
+  </section>
+
+  <section id="pyramid">
+    <h2>Workforce aging</h2>
+    <p class="note">Physician age distribution by sex, showing the width of the
+      retirement pipeline relative to new entrants.</p>
+    <div id="pyramid"></div>
+  </section>
+
+  <section id="deserts">
+    <h2>Medical desert detection</h2>
+    <p class="note">Observed regional coverage, verified region by region
+      against national totals before publication.</p>
+    <div id="regional"></div>
+  </section>
+
+  <section id="forecast">
+    <h2>Forecasting centre</h2>
+    <p class="note">Seven model families compared on one task under identical
+      walk-forward validation, then the champion applied forward.</p>
+    <div id="forecast"></div>
+  </section>
+
+  <section id="quality">
+    <h2>Data quality and model validation</h2>
+    <p class="note">Checks that run on every build, and the discontinuities
+      excluded from trend claims.</p>
+    <div id="quality"></div>
+  </section>
+
+  <div class="caveats">
+    <h2>Read before quoting a figure</h2>
+    <ul>
+      <li><strong>Regional coverage is observed, not allocated.</strong> It is
+        verified against national totals for 12 countries and effectively ends
+        in 2015. The population denominator is a 2023 snapshot, so regional rates
+        are indicative rather than same-year.</li>
+      <li><strong>Six member states publish no nurse data at all</strong>
+        (BG, CY, LU, PL, PT, SE). Any EU-wide nurse total that includes them
+        understates coverage by about a fifth of the member states.</li>
+      <li><strong>Missing is not zero.</strong> Germany reports hospital beds
+        through 2019 and nothing after. Countries that did not report are shown
+        as "not reported", never as a measurement of zero.</li>
+      <li><strong>Every tree-based model lost to the naive baseline</strong> on
+        this data, because short near-linear series cannot be extrapolated
+        beyond a training range. Reporting a gradient-boosted forecast here would
+        look more sophisticated and be worse.</li>
+      <li><strong>Hospital risk score weights are stated assumptions,</strong>
+        not fitted parameters, and need domain review before informing a funding
+        decision.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>Generated from live Eurostat dissemination data via a medallion
+      warehouse (raw → bronze → silver → gold → DuckDB). Deterministic seed,
+      quality gate on every build, 239 tests.</p>
+  </footer>
+
+</div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
