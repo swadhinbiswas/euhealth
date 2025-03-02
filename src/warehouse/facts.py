@@ -294,13 +294,20 @@ def fact_population(df: pd.DataFrame) -> pd.DataFrame:
 def fact_staffing_shortage(
     workforce: pd.DataFrame,
     population: pd.DataFrame,
-    reference_per_1000: float,
+    reference_by_profession: dict[str, float] | None = None,
 ) -> pd.DataFrame:
     """Observed gap between workforce and a reference staffing ratio.
 
     Required workers = reference ratio x population / 1000. The gap is
     required minus actual, so a positive gap is a shortage. The population
     input must be total headcount from ``fact_population``.
+
+    ``reference_by_profession`` maps a profession code to its reference ratio
+    per 1,000. This must be per profession: physicians and nurses have
+    different benchmarks (3.3 and 9.0), and applying one ratio to both makes
+    nurses look 250% staffed because they are measured against a doctor-sized
+    target. A single scalar is accepted for back-compatibility and applied to
+    every profession, which is only correct when the benchmarks match.
     """
     workers = fact_healthcare_workers(workforce)
     if workers.empty or population is None or population.empty:
@@ -342,9 +349,21 @@ def fact_staffing_shortage(
         .rename(columns={"population": "total_population"})
     )
     merged = actual.merge(pop, on=["country_code", "year"], how="inner")
-    merged["required_workers"] = (
-        merged["total_population"] / 1000 * reference_per_1000
-    )
+
+    if reference_by_profession is None:
+        # Fall back to a single ratio for every profession.
+        merged["required_workers"] = (
+            merged["total_population"] / 1000 * 3.3
+        )
+    else:
+        # Each profession is measured against its own benchmark.
+        merged["reference_per_1000"] = merged["profession_code"].map(
+            reference_by_profession
+        )
+        merged["required_workers"] = (
+            merged["total_population"] / 1000 * merged["reference_per_1000"]
+        )
+
     merged["shortage"] = merged["required_workers"] - merged["actual_workers"]
     merged["coverage_index"] = (
         merged["actual_workers"] / merged["required_workers"] * 100
@@ -353,9 +372,10 @@ def fact_staffing_shortage(
         "profession_code", "country_code", "year",
         "actual_workers", "required_workers",
         "shortage", "coverage_index", "total_population",
+        "reference_per_1000",
     ], workers="shortage", first_cols=[
         "actual_workers", "required_workers", "coverage_index",
-        "total_population",
+        "total_population", "reference_per_1000",
     ])
 
 

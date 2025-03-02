@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from config import (  # noqa: E402
-    REFERENCE_DOCTORS_PER_1000,
+    REFERENCE_BY_PROFESSION,
     WAREHOUSE,
 )
 from ingestion import eurostat  # noqa: E402
@@ -101,10 +101,12 @@ def build(report_only: bool = False) -> dict:
         "fact_hospital_capacity": fact_hospital_capacity(beds, icu),
     }
 
-    # Shortage needs a population denominator; use total headcount.
+    # Each profession is measured against its own OECD reference ratio.
+    # Applying one ratio to both made nurses appear 250% staffed, because
+    # they were being compared against a doctor-sized target.
     built["fact_staffing_shortage"] = fact_staffing_shortage(
         workforce, built["fact_population"],
-        REFERENCE_DOCTORS_PER_1000,
+        REFERENCE_BY_PROFESSION,
     )
 
     counts = build_warehouse(built, WAREHOUSE, dimensions)

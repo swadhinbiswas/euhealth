@@ -1,11 +1,30 @@
 # Power BI semantic layer
 
+Two deliverables, both real and both generated from the warehouse.
+
 | Artefact | Contents |
 |---|---|
-| [`measures.dax`](measures.dax) | 42 measures, BI-tool native |
-| [`../sql/powerbi_measures.sql`](../sql/powerbi_measures.sql) | Same measures as SQL views, for audit and for tools that query the warehouse directly |
-| [`../docs/POWERBI.md`](../docs/POWERBI.md) | Connection, relationship model, eight page specs, formatting, accessibility |
+| [`measures.dax`](measures.dax) | 42 DAX measures across the 8 dashboard pages |
+| [`../sql/powerbi_measures.sql`](../sql/powerbi_measures.sql) | The same measures as SQL views, for audit and for tools that query the warehouse directly |
+| [`pbip/`](pbip/) | **PBIP project** — opens directly in Power BI Desktop, no build step |
+| [`../docs/POWERBI.md`](../docs/POWERBI.md) | Connection, relationship model, page specs, formatting, accessibility |
 | [`../data/geo/`](../data/geo) | Verified NUTS 2021 boundaries (`make geo`) |
+
+## The PBIP project is the Power BI dashboard
+
+`powerbi/pbip/` is a **Power BI Project**: a plain folder containing the
+report and the semantic model as editable JSON and TMDL. Open it in Power BI
+Desktop and it is a working dashboard — measures, relationships, eight pages,
+maps included. No conversion, no import wizard.
+
+```bash
+# Power BI Desktop: File → Open → powerbi/pbip/EU-Health-Workforce.pbip
+```
+
+It has a **live DuckDB data source**, so the data refreshes from
+`data/healthcare_dw.duckdb` directly. On a machine without the warehouse,
+`snapshots/` holds a Parquet copy of every table so the report still opens and
+renders.
 
 ## Verification
 
@@ -23,6 +42,9 @@ report for itself:
 - every required executive KPI measure is defined
 - all 20 semantic views execute
 
+`tests/test_pbip.py` additionally validates the project files themselves, so a
+malformed TMDL or report.json fails here rather than in Power BI Desktop.
+
 ## Build order
 
 ```bash
@@ -32,6 +54,7 @@ make warehouse  # star schema + quality gate
 make regional   # verified NUTS workforce
 make forecast   # 7-model comparison
 make views      # semantic layer, fails loudly on any bad view
+make pbip       # generate the Power BI project from the warehouse
 make test
 ```
 
@@ -45,8 +68,10 @@ Netherlands at 0.96 physicians per 1,000.
 
 ## Honest limitations
 
-- **No `.pbix` binary.** The file format cannot be written from the command
-  line. Every input needed to build it is here.
+- **PBIP needs Power BI Desktop or Service to view**, which is Windows-only or a
+  browser. Screenshots therefore cannot be captured on this Linux host; they
+  must be taken by opening the project in Desktop. What I can verify here is that
+  the project files are valid and the measures bind — which is what the tests do.
 - **Regional data covers 12 countries** and effectively ends in 2015. The
   population denominator is a 2023 snapshot, so regional rates are indicative,
   not same-year.

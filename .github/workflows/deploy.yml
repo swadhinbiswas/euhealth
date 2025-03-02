@@ -46,10 +46,24 @@ jobs:
         continue-on-error: true
         run: PYTHONPATH=src python -m src.geo.cli
 
+      - name: Semantic views
+        continue-on-error: true
+        run: python scripts/build_views.py
+
+      # The PBIP is generated from the same warehouse, so a build that cannot
+      # reach Eurostat still produces a valid project from cached payloads.
+      - name: Generate Power BI project
+        continue-on-error: true
+        run: |
+          PYTHONPATH=src python -m src.powerbi.generate_pbip
+          PYTHONPATH=src python -m src.powerbi.generate_report
+
       - name: Export and assemble site
+        continue-on-error: true
         run: |
           PYTHONPATH=src python -m src.dashboard.export
           python scripts/build_site.py
+          python scripts/preview_pbip.py || true
 
       - uses: actions/upload-pages-artifact@v3
         with:

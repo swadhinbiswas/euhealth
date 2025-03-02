@@ -222,9 +222,11 @@ FROM joined;
 -- PAGE 8  Forecasting
 -- ===========================================================================
 
--- Forecast table is loaded from data/models/workforce_forecast.csv, which is
--- produced by src/ml. This view exposes the champion model alongside the naive
--- baseline so the reader can see how much the model contributes.
+-- The forecast is the output of a validated model comparison, not a SQL
+-- calculation, so it arrives as a table. scripts/build_views.py loads
+-- data/models/workforce_forecast.csv into forecast_workforce before creating
+-- this view and reports loudly if the file is missing, rather than creating an
+-- empty view that looks like a successful run.
 CREATE OR REPLACE VIEW v_forecast_vs_baseline AS
 SELECT f.country_code,
        c.country_name,

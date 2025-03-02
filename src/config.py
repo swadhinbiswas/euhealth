@@ -124,9 +124,21 @@ SECTORS = [
 
 # Reference ratios used for need estimation (per 1,000 population).
 # Benchmarks from OECD / WHO European health workforce reports.
+#
+# These are per profession and must not be collapsed into one value. Applying
+# the physician ratio to nurses measures them against a doctor-sized target
+# and reports them as 250% staffed.
 REFERENCE_DOCTORS_PER_1000 = 3.3
 REFERENCE_NURSES_PER_1000 = 9.0
 REFERENCE_POP_AGE_65_PLUS_SHARE = 0.20
+
+#: Profession code -> reference workers per 1,000 population.
+REFERENCE_BY_PROFESSION = {
+    "PHYS": REFERENCE_DOCTORS_PER_1000,
+    "NURS": REFERENCE_NURSES_PER_1000,
+    # No published benchmark for these, so they are excluded from the
+    # shortage fact rather than measured against a proxy that does not apply.
+}
 
 # Planning horizon
 FORECAST_YEARS = [2025, 2027, 2030, 2035]

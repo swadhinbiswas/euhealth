@@ -1,0 +1,1301 @@
+{
+  "defaultPowerBIDataSourceVersion": "powerBI_V3",
+  "sourceQueryCulture": "en-GB",
+  "culture": "en-GB",
+  "tables": [
+    {
+      "name": "dim_country",
+      "columns": [
+        {
+          "name": "country_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "iso3_code",
+          "dataType": "string"
+        },
+        {
+          "name": "country_name",
+          "dataType": "string"
+        },
+        {
+          "name": "nuts_prefix",
+          "dataType": "string"
+        },
+        {
+          "name": "is_eu27",
+          "dataType": "bool"
+        },
+        {
+          "name": "valid_from",
+          "dataType": "string"
+        },
+        {
+          "name": "valid_to",
+          "dataType": "string"
+        },
+        {
+          "name": "is_current",
+          "dataType": "bool"
+        },
+        {
+          "name": "version",
+          "dataType": "int64"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_country-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_country\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_country.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "dim_profession",
+      "columns": [
+        {
+          "name": "profession_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "profession_code",
+          "dataType": "string"
+        },
+        {
+          "name": "profession_name",
+          "dataType": "string"
+        },
+        {
+          "name": "source_age_codes",
+          "dataType": "string"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_profession-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_profession\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_profession.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "dim_age_group",
+      "columns": [
+        {
+          "name": "age_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "age_group_code",
+          "dataType": "string"
+        },
+        {
+          "name": "age_group_label",
+          "dataType": "string"
+        },
+        {
+          "name": "min_age",
+          "dataType": "int64"
+        },
+        {
+          "name": "max_age",
+          "dataType": "int64"
+        },
+        {
+          "name": "sort_order",
+          "dataType": "int64"
+        },
+        {
+          "name": "is_retirement_age",
+          "dataType": "bool"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_age_group-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_age_group\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_age_group.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "dim_gender",
+      "columns": [
+        {
+          "name": "gender_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "sex_code",
+          "dataType": "string"
+        },
+        {
+          "name": "sex_label",
+          "dataType": "string"
+        },
+        {
+          "name": "is_total",
+          "dataType": "bool"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_gender-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_gender\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_gender.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "dim_date",
+      "columns": [
+        {
+          "name": "date_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "date",
+          "dataType": "string"
+        },
+        {
+          "name": "year_start",
+          "dataType": "string"
+        },
+        {
+          "name": "year_end",
+          "dataType": "string"
+        },
+        {
+          "name": "quarter",
+          "dataType": "string"
+        },
+        {
+          "name": "is_observed",
+          "dataType": "bool"
+        },
+        {
+          "name": "is_projection",
+          "dataType": "bool"
+        },
+        {
+          "name": "decade",
+          "dataType": "int64"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_date-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_date\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_date.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "dim_region",
+      "columns": [
+        {
+          "name": "region_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "nuts_code",
+          "dataType": "string"
+        },
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "region_level",
+          "dataType": "string"
+        },
+        {
+          "name": "nuts_level",
+          "dataType": "double"
+        },
+        {
+          "name": "region_name",
+          "dataType": "string"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_region-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_region\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_region.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "dim_specialization",
+      "columns": [
+        {
+          "name": "specialization_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "spec_code",
+          "dataType": "string"
+        },
+        {
+          "name": "spec_name",
+          "dataType": "string"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_specialization-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_specialization\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_specialization.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "dim_sector",
+      "columns": [
+        {
+          "name": "sector_key",
+          "dataType": "int64"
+        },
+        {
+          "name": "sector_code",
+          "dataType": "string"
+        },
+        {
+          "name": "sector_name",
+          "dataType": "string"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "dim_sector-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"dim_sector\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/dim_sector.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_healthcare_workers",
+      "columns": [
+        {
+          "name": "profession_code",
+          "dataType": "string"
+        },
+        {
+          "name": "age_group_code",
+          "dataType": "string"
+        },
+        {
+          "name": "sex_code",
+          "dataType": "string"
+        },
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "measure",
+          "dataType": "string"
+        },
+        {
+          "name": "workers",
+          "dataType": "int64"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "int64"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_healthcare_workers-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_healthcare_workers\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_healthcare_workers.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_retirement",
+      "columns": [
+        {
+          "name": "profession_code",
+          "dataType": "string"
+        },
+        {
+          "name": "age_group_code",
+          "dataType": "string"
+        },
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "near_retirement_workers",
+          "dataType": "int64"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "int64"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_retirement-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_retirement\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_retirement.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_staffing_shortage",
+      "columns": [
+        {
+          "name": "profession_code",
+          "dataType": "string"
+        },
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "shortage",
+          "dataType": "double"
+        },
+        {
+          "name": "actual_workers",
+          "dataType": "int64"
+        },
+        {
+          "name": "required_workers",
+          "dataType": "double"
+        },
+        {
+          "name": "coverage_index",
+          "dataType": "double"
+        },
+        {
+          "name": "total_population",
+          "dataType": "int64"
+        },
+        {
+          "name": "reference_per_1000",
+          "dataType": "double"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "double"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_staffing_shortage-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_staffing_shortage\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_staffing_shortage.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_population",
+      "columns": [
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "sex_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "population",
+          "dataType": "int64"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "int64"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_population-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_population\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_population.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_population_nuts",
+      "columns": [
+        {
+          "name": "nuts_code",
+          "dataType": "string"
+        },
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "age_group_code",
+          "dataType": "string"
+        },
+        {
+          "name": "sex_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "population",
+          "dataType": "int64"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "int64"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_population_nuts-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_population_nuts\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_population_nuts.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_hospital_capacity",
+      "columns": [
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "bed_category",
+          "dataType": "string"
+        },
+        {
+          "name": "category_group",
+          "dataType": "string"
+        },
+        {
+          "name": "beds",
+          "dataType": "double"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "double"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_hospital_capacity-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_hospital_capacity\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_hospital_capacity.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_regional_workforce",
+      "columns": [
+        {
+          "name": "nuts_code",
+          "dataType": "string"
+        },
+        {
+          "name": "nuts_level",
+          "dataType": "double"
+        },
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "profession_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "double"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_regional_workforce-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_regional_workforce\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_regional_workforce.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_population_indicators",
+      "columns": [
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "indicator_code",
+          "dataType": "string"
+        },
+        {
+          "name": "sex_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "population",
+          "dataType": "double"
+        },
+        {
+          "name": "measure_value",
+          "dataType": "double"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_population_indicators-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    DuckDbPath = \"/home/swadhin/euhealth/data/healthcare_dw.duckdb\",\n    UseLive = File.Exists(DuckDbPath),\n    Result = if (UseLive) Table.FromDatabase(DuckDbPath, \"main\", {\"fact_population_indicators\"}) else File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_population_indicators.parquet\")\nin\n    Result"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_forecast",
+      "columns": [
+        {
+          "name": "country_code",
+          "dataType": "string"
+        },
+        {
+          "name": "profession_code",
+          "dataType": "string"
+        },
+        {
+          "name": "year",
+          "dataType": "int64"
+        },
+        {
+          "name": "forecast",
+          "dataType": "double"
+        },
+        {
+          "name": "baseline_forecast",
+          "dataType": "double"
+        },
+        {
+          "name": "latest_observed_year",
+          "dataType": "int64"
+        },
+        {
+          "name": "latest_observed",
+          "dataType": "double"
+        },
+        {
+          "name": "change_vs_2024_pct",
+          "dataType": "double"
+        }
+      ],
+      "partitions": [
+        {
+          "name": "fact_forecast-parquet",
+          "source": {
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let\n    Source = File.Contents(\"/home/swadhin/euhealth/powerbi/pbip/definition/snapshots/fact_forecast.parquet\")\nin\n    Source"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "_measures",
+      "columns": [],
+      "partitions": [],
+      "measures": [
+        {
+          "name": "Total Doctors",
+          "expression": "VAR LatestYear := MAX ( dim_date[year] )\nRETURN\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_total\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[profession_code] = \"PHYS\",\n    dim_date[year] = LatestYear\n)\n\nTotal Nurses :=\nVAR LatestYear := MAX ( dim_date[year] )\nRETURN\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_total\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[profession_code] = \"NURS\",\n    dim_date[year] = LatestYear\n)\n\nTotal Workers :=\nVAR LatestYear := MAX ( dim_date[year] )\nRETURN\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_total\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    dim_date[year] = LatestYear\n)\n\n// Required workforce at the reference staffing ratio.\n// Recomputed from population rather than averaged, because averaging a\n// precomputed required figure gives every country equal weight regardless of\n// size, which understates the gap in large countries.\nRequired Workers :=\nDIVIDE (\n    SUM ( fact_staffing_shortage[required_workers] ),\n    COUNTROWS ( fact_staffing_shortage )\n)\n\n// Absolute gap: required minus actual. Positive means a shortage.\nWorkforce Gap :=\nSUM ( fact_staffing_shortage[shortage] )\n\n// Signed gap as a percentage of requirement. This is the headline KPI on\n// page 1: a positive value means understaffed.\nWorkforce Gap % :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Gap = SUM ( fact_staffing_shortage[shortage] )\nRETURN\n    DIVIDE ( Gap, Required )\n\n// Coverage index: actual as a percentage of the reference ratio. 100 means\n// exactly at the OECD benchmark.\nStaffing Sufficiency :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Actual = SUM ( fact_staffing_shortage[actual_workers] )\nRETURN\n    DIVIDE ( Actual, Required )\n\n// Share of the workforce aged 55 or over. The primary retirement exposure.\nRetirement Risk % :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0.00",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Total Nurses",
+          "expression": "VAR LatestYear := MAX ( dim_date[year] )\nRETURN\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_total\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[profession_code] = \"NURS\",\n    dim_date[year] = LatestYear\n)\n\nTotal Workers :=\nVAR LatestYear := MAX ( dim_date[year] )\nRETURN\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_total\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    dim_date[year] = LatestYear\n)\n\n// Required workforce at the reference staffing ratio.\n// Recomputed from population rather than averaged, because averaging a\n// precomputed required figure gives every country equal weight regardless of\n// size, which understates the gap in large countries.\nRequired Workers :=\nDIVIDE (\n    SUM ( fact_staffing_shortage[required_workers] ),\n    COUNTROWS ( fact_staffing_shortage )\n)\n\n// Absolute gap: required minus actual. Positive means a shortage.\nWorkforce Gap :=\nSUM ( fact_staffing_shortage[shortage] )\n\n// Signed gap as a percentage of requirement. This is the headline KPI on\n// page 1: a positive value means understaffed.\nWorkforce Gap % :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Gap = SUM ( fact_staffing_shortage[shortage] )\nRETURN\n    DIVIDE ( Gap, Required )\n\n// Coverage index: actual as a percentage of the reference ratio. 100 means\n// exactly at the OECD benchmark.\nStaffing Sufficiency :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Actual = SUM ( fact_staffing_shortage[actual_workers] )\nRETURN\n    DIVIDE ( Actual, Required )\n\n// Share of the workforce aged 55 or over. The primary retirement exposure.\nRetirement Risk % :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0.00",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Total Workers",
+          "expression": "VAR LatestYear := MAX ( dim_date[year] )\nRETURN\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_total\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    dim_date[year] = LatestYear\n)\n\n// Required workforce at the reference staffing ratio.\n// Recomputed from population rather than averaged, because averaging a\n// precomputed required figure gives every country equal weight regardless of\n// size, which understates the gap in large countries.\nRequired Workers :=\nDIVIDE (\n    SUM ( fact_staffing_shortage[required_workers] ),\n    COUNTROWS ( fact_staffing_shortage )\n)\n\n// Absolute gap: required minus actual. Positive means a shortage.\nWorkforce Gap :=\nSUM ( fact_staffing_shortage[shortage] )\n\n// Signed gap as a percentage of requirement. This is the headline KPI on\n// page 1: a positive value means understaffed.\nWorkforce Gap % :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Gap = SUM ( fact_staffing_shortage[shortage] )\nRETURN\n    DIVIDE ( Gap, Required )\n\n// Coverage index: actual as a percentage of the reference ratio. 100 means\n// exactly at the OECD benchmark.\nStaffing Sufficiency :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Actual = SUM ( fact_staffing_shortage[actual_workers] )\nRETURN\n    DIVIDE ( Actual, Required )\n\n// Share of the workforce aged 55 or over. The primary retirement exposure.\nRetirement Risk % :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Required Workers",
+          "expression": "DIVIDE (\n    SUM ( fact_staffing_shortage[required_workers] ),\n    COUNTROWS ( fact_staffing_shortage )\n)\n\n// Absolute gap: required minus actual. Positive means a shortage.\nWorkforce Gap :=\nSUM ( fact_staffing_shortage[shortage] )\n\n// Signed gap as a percentage of requirement. This is the headline KPI on\n// page 1: a positive value means understaffed.\nWorkforce Gap % :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Gap = SUM ( fact_staffing_shortage[shortage] )\nRETURN\n    DIVIDE ( Gap, Required )\n\n// Coverage index: actual as a percentage of the reference ratio. 100 means\n// exactly at the OECD benchmark.\nStaffing Sufficiency :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Actual = SUM ( fact_staffing_shortage[actual_workers] )\nRETURN\n    DIVIDE ( Actual, Required )\n\n// Share of the workforce aged 55 or over. The primary retirement exposure.\nRetirement Risk % :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Workforce Gap",
+          "expression": "SUM ( fact_staffing_shortage[shortage] )\n\n// Signed gap as a percentage of requirement. This is the headline KPI on\n// page 1: a positive value means understaffed.\nWorkforce Gap % :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Gap = SUM ( fact_staffing_shortage[shortage] )\nRETURN\n    DIVIDE ( Gap, Required )\n\n// Coverage index: actual as a percentage of the reference ratio. 100 means\n// exactly at the OECD benchmark.\nStaffing Sufficiency :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Actual = SUM ( fact_staffing_shortage[actual_workers] )\nRETURN\n    DIVIDE ( Actual, Required )\n\n// Share of the workforce aged 55 or over. The primary retirement exposure.\nRetirement Risk % :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0.00",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Workforce Gap %",
+          "expression": "VAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Gap = SUM ( fact_staffing_shortage[shortage] )\nRETURN\n    DIVIDE ( Gap, Required )\n\n// Coverage index: actual as a percentage of the reference ratio. 100 means\n// exactly at the OECD benchmark.\nStaffing Sufficiency :=\nVAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Actual = SUM ( fact_staffing_shortage[actual_workers] )\nRETURN\n    DIVIDE ( Actual, Required )\n\n// Share of the workforce aged 55 or over. The primary retirement exposure.\nRetirement Risk % :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "0.0%",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Staffing Sufficiency",
+          "expression": "VAR Required = SUM ( fact_staffing_shortage[required_workers] )\nVAR Actual = SUM ( fact_staffing_shortage[actual_workers] )\nRETURN\n    DIVIDE ( Actual, Required )\n\n// Share of the workforce aged 55 or over. The primary retirement exposure.\nRetirement Risk % :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "0.0%",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Retirement Risk %",
+          "expression": "VAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nVAR NearRetirement =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n    )\nRETURN\n    DIVIDE ( NearRetirement, TotalByAge )\n\n// Share aged 65 or over: the group closest to actual exit.\nRetirement Exposure 65+ :=\nVAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "0.0%",
+          "displayFolder": "2 \u00b7 Retirement exposure"
+        },
+        {
+          "name": "Retirement Exposure 65+",
+          "expression": "VAR TotalByAge =\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_by_age\",\n        fact_healthcare_workers[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE (\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_by_age\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[age_group_code] = \"Y_GE65\"\n        ),\n        TotalByAge\n    )\n\n// Absolute number of workers in retirement-age bands.\nNear Retirement Workers :=\nCALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0.00",
+          "displayFolder": "2 \u00b7 Retirement exposure"
+        },
+        {
+          "name": "Near Retirement Workers",
+          "expression": "CALCULATE (\n    SUM ( fact_healthcare_workers[measure_value] ),\n    fact_healthcare_workers[measure] = \"headcount_by_age\",\n    fact_healthcare_workers[sex_code] = \"T\",\n    fact_healthcare_workers[age_group_code] IN { \"Y55_64\", \"Y_GE65\" }\n)\n\n// ICU intensity: intensive care beds as a share of all hospital beds.\nHospital Readiness :=\nVAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0",
+          "displayFolder": "2 \u00b7 Retirement exposure"
+        },
+        {
+          "name": "Hospital Readiness",
+          "expression": "VAR ICU = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"icu_bed\" )\nVAR AllBeds = CALCULATE ( SUM ( fact_hospital_capacity[beds] ), fact_hospital_capacity[category_group] = \"hospital_bed\" )\nRETURN\n    DIVIDE ( ICU, AllBeds )\n\nHospital Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0.00",
+          "displayFolder": "3 \u00b7 Hospital capacity"
+        },
+        {
+          "name": "Hospital Beds",
+          "expression": "CALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"hospital_bed\"\n)\n\nICU Beds :=\nCALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0",
+          "displayFolder": "3 \u00b7 Hospital capacity"
+        },
+        {
+          "name": "ICU Beds",
+          "expression": "CALCULATE (\n    SUM ( fact_hospital_capacity[beds] ),\n    fact_hospital_capacity[category_group] = \"icu_bed\"\n)",
+          "formatString": "#,0",
+          "displayFolder": "3 \u00b7 Hospital capacity"
+        },
+        {
+          "name": "Worker to Population Ratio",
+          "expression": "VAR Workers = [Total Workers]\nVAR Population =\n    CALCULATE ( SUM ( fact_population[population] ) )\nRETURN\n    DIVIDE ( Workers, Population ) * 1000\n\n// Population-weighted, so a micro-state cannot dominate an EU-wide figure.\nPopulation Weighted Coverage :=\nVAR WeightedCoverage =\n    SUMX (\n        SUMMARIZE ( dim_country, dim_country[country_code] ),\n        VAR Pop = CALCULATE ( SUM ( fact_population[population] ) )\n        VAR Workers =\n            CALCULATE (\n                SUM ( fact_healthcare_workers[measure_value] ),\n                fact_healthcare_workers[measure] = \"headcount_total\",\n                fact_healthcare_workers[sex_code] = \"T\"\n            )\n        RETURN\n            DIVIDE ( Workers, Pop ) * 1000 * Pop\n    )\nRETURN\n    DIVIDE ( WeightedCoverage, CALCULATE ( SUM ( fact_population[population] ) ) )\n\n// True only where the country actually reported. Use this to grey out cards\n// rather than letting a missing value read as zero.\nPhysicians Reported :=\nISBLANK (\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_total\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[profession_code] = \"PHYS\"\n    )\n) = FALSE\n\nNurses Reported :=\nISBLANK (\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_total\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[profession_code] = \"NURS\"\n    )\n) = FALSE\n\n// Countries in scope for the current visual. Six member states publish no\n// nurse data at all; counting them would understate EU coverage.\nCountries Reporting Nurses :=\nVAR Unreported =\n    CALCULATETABLE (\n        VALUES ( dim_country[country_code] ),\n        FILTER (\n            VALUES ( dim_country[country_code] ),\n            ISBLANK (\n                CALCULATE (\n                    SUM ( fact_healthcare_workers[measure_value] ),\n                    fact_healthcare_workers[measure] = \"headcount_total\",\n                    fact_healthcare_workers[sex_code] = \"T\",\n                    fact_healthcare_workers[profession_code] = \"NURS\"\n                )\n            )\n        )\n    )\nRETURN\n    COUNTROWS ( dim_country ) - COUNTROWS ( Unreported )",
+          "formatString": "0.0%",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Population Weighted Coverage",
+          "expression": "VAR WeightedCoverage =\n    SUMX (\n        SUMMARIZE ( dim_country, dim_country[country_code] ),\n        VAR Pop = CALCULATE ( SUM ( fact_population[population] ) )\n        VAR Workers =\n            CALCULATE (\n                SUM ( fact_healthcare_workers[measure_value] ),\n                fact_healthcare_workers[measure] = \"headcount_total\",\n                fact_healthcare_workers[sex_code] = \"T\"\n            )\n        RETURN\n            DIVIDE ( Workers, Pop ) * 1000 * Pop\n    )\nRETURN\n    DIVIDE ( WeightedCoverage, CALCULATE ( SUM ( fact_population[population] ) ) )\n\n// True only where the country actually reported. Use this to grey out cards\n// rather than letting a missing value read as zero.\nPhysicians Reported :=\nISBLANK (\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_total\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[profession_code] = \"PHYS\"\n    )\n) = FALSE\n\nNurses Reported :=\nISBLANK (\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_total\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[profession_code] = \"NURS\"\n    )\n) = FALSE\n\n// Countries in scope for the current visual. Six member states publish no\n// nurse data at all; counting them would understate EU coverage.\nCountries Reporting Nurses :=\nVAR Unreported =\n    CALCULATETABLE (\n        VALUES ( dim_country[country_code] ),\n        FILTER (\n            VALUES ( dim_country[country_code] ),\n            ISBLANK (\n                CALCULATE (\n                    SUM ( fact_healthcare_workers[measure_value] ),\n                    fact_healthcare_workers[measure] = \"headcount_total\",\n                    fact_healthcare_workers[sex_code] = \"T\",\n                    fact_healthcare_workers[profession_code] = \"NURS\"\n                )\n            )\n        )\n    )\nRETURN\n    COUNTROWS ( dim_country ) - COUNTROWS ( Unreported )",
+          "formatString": "#,0",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Physicians Reported",
+          "expression": "ISBLANK (\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_total\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[profession_code] = \"PHYS\"\n    )\n) = FALSE\n\nNurses Reported :=\nISBLANK (\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_total\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[profession_code] = \"NURS\"\n    )\n) = FALSE\n\n// Countries in scope for the current visual. Six member states publish no\n// nurse data at all; counting them would understate EU coverage.\nCountries Reporting Nurses :=\nVAR Unreported =\n    CALCULATETABLE (\n        VALUES ( dim_country[country_code] ),\n        FILTER (\n            VALUES ( dim_country[country_code] ),\n            ISBLANK (\n                CALCULATE (\n                    SUM ( fact_healthcare_workers[measure_value] ),\n                    fact_healthcare_workers[measure] = \"headcount_total\",\n                    fact_healthcare_workers[sex_code] = \"T\",\n                    fact_healthcare_workers[profession_code] = \"NURS\"\n                )\n            )\n        )\n    )\nRETURN\n    COUNTROWS ( dim_country ) - COUNTROWS ( Unreported )",
+          "formatString": "#,0.00",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Nurses Reported",
+          "expression": "ISBLANK (\n    CALCULATE (\n        SUM ( fact_healthcare_workers[measure_value] ),\n        fact_healthcare_workers[measure] = \"headcount_total\",\n        fact_healthcare_workers[sex_code] = \"T\",\n        fact_healthcare_workers[profession_code] = \"NURS\"\n    )\n) = FALSE\n\n// Countries in scope for the current visual. Six member states publish no\n// nurse data at all; counting them would understate EU coverage.\nCountries Reporting Nurses :=\nVAR Unreported =\n    CALCULATETABLE (\n        VALUES ( dim_country[country_code] ),\n        FILTER (\n            VALUES ( dim_country[country_code] ),\n            ISBLANK (\n                CALCULATE (\n                    SUM ( fact_healthcare_workers[measure_value] ),\n                    fact_healthcare_workers[measure] = \"headcount_total\",\n                    fact_healthcare_workers[sex_code] = \"T\",\n                    fact_healthcare_workers[profession_code] = \"NURS\"\n                )\n            )\n        )\n    )\nRETURN\n    COUNTROWS ( dim_country ) - COUNTROWS ( Unreported )",
+          "formatString": "#,0.00",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Countries Reporting Nurses",
+          "expression": "VAR Unreported =\n    CALCULATETABLE (\n        VALUES ( dim_country[country_code] ),\n        FILTER (\n            VALUES ( dim_country[country_code] ),\n            ISBLANK (\n                CALCULATE (\n                    SUM ( fact_healthcare_workers[measure_value] ),\n                    fact_healthcare_workers[measure] = \"headcount_total\",\n                    fact_healthcare_workers[sex_code] = \"T\",\n                    fact_healthcare_workers[profession_code] = \"NURS\"\n                )\n            )\n        )\n    )\nRETURN\n    COUNTROWS ( dim_country ) - COUNTROWS ( Unreported )",
+          "formatString": "#,0",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Shortage Severity Rank",
+          "expression": "VAR Shortage = [Workforce Gap]\nRETURN\n    IF (\n        NOT ISBLANK ( Shortage ),\n        RANKX (\n            ALLSELECTED ( dim_country[country_code] ),\n            CALCULATE ( [Workforce Gap] ),\n            ,\n            DESC,\n            DENSE\n        )\n    )\n\n// Year-over-year change in the gap. Negative means the position improved.\nGap YoY Change :=\nVAR Current = [Workforce Gap]\nVAR Prior =\n    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )\nRETURN\n    Current - Prior\n\n// Three-year rolling mean of the gap, so one unusual year does not read as a\n// trend. Uses the date table, not a row-wise window.\nGap Rolling 3Y :=\nVAR CurrentGap = [Workforce Gap]\nVAR Window =\n    DATESINPERIOD ( dim_date[Date], MAX ( dim_date[Date] ), -3, YEAR )\nRETURN\n    AVERAGEX (\n        Window,\n        CALCULATE ( [Workforce Gap] )\n    )\n\n// Countries whose coverage index is deteriorating year on year.\nDeteriorating Countries :=\nVAR PriorYear = CALCULATE ( MAX ( dim_date[year] ), DATEADD ( dim_date[Date], -1, YEAR ) )\nVAR CurrentYear = MAX ( dim_date[year] )\nVAR Deteriorated =\n    FILTER (\n        ALL ( dim_country[country_code] ),\n        VAR C = [Staffing Sufficiency]\n        VAR P =\n            CALCULATE (\n                [Staffing Sufficiency],\n                dim_country[country_code] = dim_country[country_code],\n                dim_date[year] = PriorYear\n            )\n        RETURN\n            NOT ISBLANK ( C ) && NOT ISBLANK ( P ) && C < P\n    )\nRETURN\n    COUNTROWS ( Deteriorated )",
+          "formatString": "#,0.00",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Gap YoY Change",
+          "expression": "VAR Current = [Workforce Gap]\nVAR Prior =\n    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )\nRETURN\n    Current - Prior\n\n// Three-year rolling mean of the gap, so one unusual year does not read as a\n// trend. Uses the date table, not a row-wise window.\nGap Rolling 3Y :=\nVAR CurrentGap = [Workforce Gap]\nVAR Window =\n    DATESINPERIOD ( dim_date[Date], MAX ( dim_date[Date] ), -3, YEAR )\nRETURN\n    AVERAGEX (\n        Window,\n        CALCULATE ( [Workforce Gap] )\n    )\n\n// Countries whose coverage index is deteriorating year on year.\nDeteriorating Countries :=\nVAR PriorYear = CALCULATE ( MAX ( dim_date[year] ), DATEADD ( dim_date[Date], -1, YEAR ) )\nVAR CurrentYear = MAX ( dim_date[year] )\nVAR Deteriorated =\n    FILTER (\n        ALL ( dim_country[country_code] ),\n        VAR C = [Staffing Sufficiency]\n        VAR P =\n            CALCULATE (\n                [Staffing Sufficiency],\n                dim_country[country_code] = dim_country[country_code],\n                dim_date[year] = PriorYear\n            )\n        RETURN\n            NOT ISBLANK ( C ) && NOT ISBLANK ( P ) && C < P\n    )\nRETURN\n    COUNTROWS ( Deteriorated )",
+          "formatString": "#,0.00",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Gap Rolling 3Y",
+          "expression": "VAR CurrentGap = [Workforce Gap]\nVAR Window =\n    DATESINPERIOD ( dim_date[Date], MAX ( dim_date[Date] ), -3, YEAR )\nRETURN\n    AVERAGEX (\n        Window,\n        CALCULATE ( [Workforce Gap] )\n    )\n\n// Countries whose coverage index is deteriorating year on year.\nDeteriorating Countries :=\nVAR PriorYear = CALCULATE ( MAX ( dim_date[year] ), DATEADD ( dim_date[Date], -1, YEAR ) )\nVAR CurrentYear = MAX ( dim_date[year] )\nVAR Deteriorated =\n    FILTER (\n        ALL ( dim_country[country_code] ),\n        VAR C = [Staffing Sufficiency]\n        VAR P =\n            CALCULATE (\n                [Staffing Sufficiency],\n                dim_country[country_code] = dim_country[country_code],\n                dim_date[year] = PriorYear\n            )\n        RETURN\n            NOT ISBLANK ( C ) && NOT ISBLANK ( P ) && C < P\n    )\nRETURN\n    COUNTROWS ( Deteriorated )",
+          "formatString": "#,0.00",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Deteriorating Countries",
+          "expression": "VAR PriorYear = CALCULATE ( MAX ( dim_date[year] ), DATEADD ( dim_date[Date], -1, YEAR ) )\nVAR CurrentYear = MAX ( dim_date[year] )\nVAR Deteriorated =\n    FILTER (\n        ALL ( dim_country[country_code] ),\n        VAR C = [Staffing Sufficiency]\n        VAR P =\n            CALCULATE (\n                [Staffing Sufficiency],\n                dim_country[country_code] = dim_country[country_code],\n                dim_date[year] = PriorYear\n            )\n        RETURN\n            NOT ISBLANK ( C ) && NOT ISBLANK ( P ) && C < P\n    )\nRETURN\n    COUNTROWS ( Deteriorated )",
+          "formatString": "#,0",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Workforce Aging Index",
+          "expression": "RETURNFILTERVALUES ( dim_age_group, RETURNSUBSTITUTE ( [Retirement Risk %] ) )\n\n// Relative position against the EU average, useful for a conditional-format\n// card without hard-coding a benchmark per country.\nAging vs EU Average :=\nVAR Mine = [Retirement Risk %]\nVAR EUMean = CALCULATE ( [Retirement Risk %], ALL ( dim_country ) )\nRETURN\n    DIVIDE ( Mine - EUMean, EUMean )\n\n// Replacement demand: workers in retirement bands as an absolute headcount.\nReplacement Demand :=\n[Near Retirement Workers]",
+          "formatString": "0.0%",
+          "displayFolder": "2 \u00b7 Retirement exposure"
+        },
+        {
+          "name": "Aging vs EU Average",
+          "expression": "VAR Mine = [Retirement Risk %]\nVAR EUMean = CALCULATE ( [Retirement Risk %], ALL ( dim_country ) )\nRETURN\n    DIVIDE ( Mine - EUMean, EUMean )\n\n// Replacement demand: workers in retirement bands as an absolute headcount.\nReplacement Demand :=\n[Near Retirement Workers]",
+          "formatString": "#,0.00",
+          "displayFolder": "2 \u00b7 Retirement exposure"
+        },
+        {
+          "name": "Replacement Demand",
+          "expression": "[Near Retirement Workers]",
+          "formatString": "#,0.00",
+          "displayFolder": "2 \u00b7 Retirement exposure"
+        },
+        {
+          "name": "Hospital Risk Score",
+          "expression": "VAR BedsPerNurse =\n    DIVIDE (\n        [Hospital Beds],\n        CALCULATE (\n            SUM ( fact_healthcare_workers[measure_value] ),\n            fact_healthcare_workers[measure] = \"headcount_total\",\n            fact_healthcare_workers[sex_code] = \"T\",\n            fact_healthcare_workers[profession_code] = \"NURS\"\n        )\n    )\nVAR ReferenceBedsPerNurse = 0.8\nVAR WorkforcePressure =\n    MIN ( 1, DIVIDE ( ReferenceBedsPerNurse, BedsPerNurse ) )\nVAR ICUScarcity =\n    MIN ( 1, DIVIDE ( 0.04, [Hospital Readiness] ) )\nVAR RetirementPressure = MIN ( 1, [Retirement Risk %] / 0.6 )\nRETURN\n    ROUND (\n        ( WorkforcePressure * 0.40 + ICUScarcity * 0.35 + RetirementPressure * 0.25 )\n        * 100,\n        1\n    )\n\n// Discrete tier so the score is actionable rather than a continuous number\n// nobody can act on.\nHospital Risk Tier :=\nVAR Score = [Hospital Risk Score]\nRETURN\n    SWITCH (\n        TRUE (),\n        ISBLANK ( Score ), \"Unknown\",\n        Score >= 75, \"Critical\",\n        Score >= 50, \"High\",\n        Score >= 25, \"Medium\",\n        \"Low\"\n    )",
+          "formatString": "0.0",
+          "displayFolder": "3 \u00b7 Hospital capacity"
+        },
+        {
+          "name": "Hospital Risk Tier",
+          "expression": "VAR Score = [Hospital Risk Score]\nRETURN\n    SWITCH (\n        TRUE (),\n        ISBLANK ( Score ), \"Unknown\",\n        Score >= 75, \"Critical\",\n        Score >= 50, \"High\",\n        Score >= 25, \"Medium\",\n        \"Low\"\n    )",
+          "formatString": "#,0.00",
+          "displayFolder": "3 \u00b7 Hospital capacity"
+        },
+        {
+          "name": "Regional Coverage",
+          "expression": "VAR Workers =\n    CALCULATE ( SUM ( fact_regional_workforce[measure_value] ) )\nVAR Population =\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\"\n    )\nRETURN\n    DIVIDE ( Workers, Population ) * 1000\n\n// Medical desert score: combines low density with a small population base,\n// because a thinly served region of 20,000 people is a different problem from\n// the same density in a region of 2 million.\nMedical Desert Score :=\nVAR Coverage = [Regional Coverage]\nVAR Population =\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\"\n    )\nVAR DensityPenalty = MIN ( 1, DIVIDE ( 50000, Population ) )\nRETURN\n    IF (\n        ISBLANK ( Coverage ),\n        BLANK (),\n        ROUND ( MIN ( 100, DIVIDE ( 12, Coverage ) * 70 + DensityPenalty * 30 ), 1 )\n    )\n\n// Four action tiers, cut on the observed distribution.\nMedical Desert Tier :=\nVAR Score = [Medical Desert Score]\nRETURN\n    SWITCH (\n        TRUE (),\n        ISBLANK ( Score ), \"Unknown\",\n        Score >= 70, \"Critical\",\n        Score >= 45, \"High\",\n        Score >= 25, \"Medium\",\n        \"Low\"\n    )\n\n// Regions in a critical desert, for the priority-funding page.\nCritical Desert Regions :=\nVAR Critical =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\"\n    )\nRETURN\n    COUNTROWS ( Critical )\n\n// Population affected: the number of people living in critical regions.\n// This is the equity figure for a funding decision.\nPopulation In Deserts :=\nVAR Deserts =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\" || Tier = \"High\"\n    )\nRETURN\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\",\n        KEEPFILTERS ( Deserts )\n    )",
+          "formatString": "#,0.00",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Medical Desert Score",
+          "expression": "VAR Coverage = [Regional Coverage]\nVAR Population =\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\"\n    )\nVAR DensityPenalty = MIN ( 1, DIVIDE ( 50000, Population ) )\nRETURN\n    IF (\n        ISBLANK ( Coverage ),\n        BLANK (),\n        ROUND ( MIN ( 100, DIVIDE ( 12, Coverage ) * 70 + DensityPenalty * 30 ), 1 )\n    )\n\n// Four action tiers, cut on the observed distribution.\nMedical Desert Tier :=\nVAR Score = [Medical Desert Score]\nRETURN\n    SWITCH (\n        TRUE (),\n        ISBLANK ( Score ), \"Unknown\",\n        Score >= 70, \"Critical\",\n        Score >= 45, \"High\",\n        Score >= 25, \"Medium\",\n        \"Low\"\n    )\n\n// Regions in a critical desert, for the priority-funding page.\nCritical Desert Regions :=\nVAR Critical =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\"\n    )\nRETURN\n    COUNTROWS ( Critical )\n\n// Population affected: the number of people living in critical regions.\n// This is the equity figure for a funding decision.\nPopulation In Deserts :=\nVAR Deserts =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\" || Tier = \"High\"\n    )\nRETURN\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\",\n        KEEPFILTERS ( Deserts )\n    )",
+          "formatString": "0.0",
+          "displayFolder": "4 \u00b7 Regional access"
+        },
+        {
+          "name": "Medical Desert Tier",
+          "expression": "VAR Score = [Medical Desert Score]\nRETURN\n    SWITCH (\n        TRUE (),\n        ISBLANK ( Score ), \"Unknown\",\n        Score >= 70, \"Critical\",\n        Score >= 45, \"High\",\n        Score >= 25, \"Medium\",\n        \"Low\"\n    )\n\n// Regions in a critical desert, for the priority-funding page.\nCritical Desert Regions :=\nVAR Critical =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\"\n    )\nRETURN\n    COUNTROWS ( Critical )\n\n// Population affected: the number of people living in critical regions.\n// This is the equity figure for a funding decision.\nPopulation In Deserts :=\nVAR Deserts =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\" || Tier = \"High\"\n    )\nRETURN\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\",\n        KEEPFILTERS ( Deserts )\n    )",
+          "formatString": "#,0.00",
+          "displayFolder": "4 \u00b7 Regional access"
+        },
+        {
+          "name": "Critical Desert Regions",
+          "expression": "VAR Critical =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\"\n    )\nRETURN\n    COUNTROWS ( Critical )\n\n// Population affected: the number of people living in critical regions.\n// This is the equity figure for a funding decision.\nPopulation In Deserts :=\nVAR Deserts =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\" || Tier = \"High\"\n    )\nRETURN\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\",\n        KEEPFILTERS ( Deserts )\n    )",
+          "formatString": "#,0",
+          "displayFolder": "4 \u00b7 Regional access"
+        },
+        {
+          "name": "Population In Deserts",
+          "expression": "VAR Deserts =\n    FILTER (\n        ALL ( dim_region[nuts_code] ),\n        VAR Tier = CALCULATE ( [Medical Desert Tier] )\n        RETURN Tier = \"Critical\" || Tier = \"High\"\n    )\nRETURN\n    CALCULATE (\n        SUM ( fact_population_nuts[population] ),\n        fact_population_nuts[age_group_code] IS BLANK (),\n        fact_population_nuts[sex_code] = \"T\",\n        KEEPFILTERS ( Deserts )\n    )",
+          "formatString": "#,0",
+          "displayFolder": "4 \u00b7 Regional access"
+        },
+        {
+          "name": "Forecasted Gap",
+          "expression": "VAR Forecast = [Forecast Workers]\nVAR Required = CALCULATE ( [Required Workers] )\nRETURN\n    Forecast - Required\n\n// Model uplift over the naive baseline, so a reader can see whether the model\n// adds anything or is just carrying the last observed value forward.\nModel Uplift :=\nVAR F = [Forecast Workers]\nVAR B = [Baseline Forecast]\nRETURN\n    F - B\n\n// Direction of travel in the forecast horizon.\nForecast Direction :=\nVAR Change = [Forecast Change %]\nRETURN\n    SWITCH ( TRUE (), ISBLANK ( Change ), \"Unknown\", Change > 1, \"Growing\",\n            Change < -1, \"Shrinking\", \"Stable\" )",
+          "formatString": "#,0.00",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Model Uplift",
+          "expression": "VAR F = [Forecast Workers]\nVAR B = [Baseline Forecast]\nRETURN\n    F - B\n\n// Direction of travel in the forecast horizon.\nForecast Direction :=\nVAR Change = [Forecast Change %]\nRETURN\n    SWITCH ( TRUE (), ISBLANK ( Change ), \"Unknown\", Change > 1, \"Growing\",\n            Change < -1, \"Shrinking\", \"Stable\" )",
+          "formatString": "#,0.00",
+          "displayFolder": "5 \u00b7 Forecasting"
+        },
+        {
+          "name": "Forecast Direction",
+          "expression": "VAR Change = [Forecast Change %]\nRETURN\n    SWITCH ( TRUE (), ISBLANK ( Change ), \"Unknown\", Change > 1, \"Growing\",\n            Change < -1, \"Shrinking\", \"Stable\" )",
+          "formatString": "#,0.00",
+          "displayFolder": "5 \u00b7 Forecasting"
+        },
+        {
+          "name": "Coverage Index",
+          "expression": "[Staffing Sufficiency]\nFuture Capacity := [Total Workers] + [Forecast Workers] - [Total Workers]\nHealthcare Equity :=\nVAR Spread =\n    CALCULATE (\n        MAXX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] )\n        - MINX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] ),\n        ALL ( dim_country )\n    )\nRETURN\n    DIVIDE ( 1, 1 + Spread )\nRegional Risk := [Hospital Risk Score]\nRecruitment Efficiency :=\nVAR CurrentGap = [Workforce Gap]\nVAR PriorGap =\n    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )\nRETURN\n    DIVIDE ( PriorGap - CurrentGap, ABS ( PriorGap ) )\nHealthcare Access Score := [Regional Coverage]",
+          "formatString": "0.0%",
+          "displayFolder": "1 \u00b7 Coverage and gap"
+        },
+        {
+          "name": "Future Capacity",
+          "expression": "[Total Workers] + [Forecast Workers] - [Total Workers]\nHealthcare Equity :=\nVAR Spread =\n    CALCULATE (\n        MAXX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] )\n        - MINX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] ),\n        ALL ( dim_country )\n    )\nRETURN\n    DIVIDE ( 1, 1 + Spread )\nRegional Risk := [Hospital Risk Score]\nRecruitment Efficiency :=\nVAR CurrentGap = [Workforce Gap]\nVAR PriorGap =\n    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )\nRETURN\n    DIVIDE ( PriorGap - CurrentGap, ABS ( PriorGap ) )\nHealthcare Access Score := [Regional Coverage]",
+          "formatString": "#,0.00",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Healthcare Equity",
+          "expression": "VAR Spread =\n    CALCULATE (\n        MAXX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] )\n        - MINX ( SUMMARIZE ( dim_country, dim_country[country_code] ), [Staffing Sufficiency] ),\n        ALL ( dim_country )\n    )\nRETURN\n    DIVIDE ( 1, 1 + Spread )\nRegional Risk := [Hospital Risk Score]\nRecruitment Efficiency :=\nVAR CurrentGap = [Workforce Gap]\nVAR PriorGap =\n    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )\nRETURN\n    DIVIDE ( PriorGap - CurrentGap, ABS ( PriorGap ) )\nHealthcare Access Score := [Regional Coverage]",
+          "formatString": "0.0%",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Regional Risk",
+          "expression": "[Hospital Risk Score]\nRecruitment Efficiency :=\nVAR CurrentGap = [Workforce Gap]\nVAR PriorGap =\n    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )\nRETURN\n    DIVIDE ( PriorGap - CurrentGap, ABS ( PriorGap ) )\nHealthcare Access Score := [Regional Coverage]",
+          "formatString": "#,0.00",
+          "displayFolder": "4 \u00b7 Regional access"
+        },
+        {
+          "name": "Recruitment Efficiency",
+          "expression": "VAR CurrentGap = [Workforce Gap]\nVAR PriorGap =\n    CALCULATE ( [Workforce Gap], SAMEPERIODLASTYEAR ( dim_date[Date] ) )\nRETURN\n    DIVIDE ( PriorGap - CurrentGap, ABS ( PriorGap ) )\nHealthcare Access Score := [Regional Coverage]",
+          "formatString": "#,0.00",
+          "displayFolder": "0 \u00b7 Headline KPIs"
+        },
+        {
+          "name": "Healthcare Access Score",
+          "expression": "[Regional Coverage]",
+          "formatString": "0.0",
+          "displayFolder": "4 \u00b7 Regional access"
+        },
+        {
+          "name": "Forecast Workers",
+          "expression": "SUM ( fact_forecast[forecast] )",
+          "formatString": "#,0",
+          "displayFolder": "5 \u00b7 Forecasting"
+        },
+        {
+          "name": "Baseline Forecast",
+          "expression": "SUM ( fact_forecast[baseline_forecast] )",
+          "formatString": "#,0.00",
+          "displayFolder": "5 \u00b7 Forecasting"
+        },
+        {
+          "name": "Forecast Change %",
+          "expression": "VAR Latest = CALCULATE ( MAX ( fact_forecast[year] ) )\nVAR LatestValue = CALCULATE (\n    SUM ( fact_forecast[forecast] ),\n    fact_forecast[year] = Latest )\nVAR Baseline = CALCULATE (\n    SUM ( fact_forecast[forecast] ),\n    fact_forecast[year] = Latest - 5 )\nRETURN DIVIDE ( LatestValue - Baseline, Baseline )",
+          "formatString": "0.0%",
+          "displayFolder": "5 \u00b7 Forecasting"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "fact_healthcare_workers_country_code_to_dim_country_country_code",
+      "fromTable": "fact_healthcare_workers",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_healthcare_workers_profession_code_to_dim_profession_profession_code",
+      "fromTable": "fact_healthcare_workers",
+      "fromColumn": "profession_code",
+      "toTable": "dim_profession",
+      "toColumn": "profession_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_healthcare_workers_age_group_code_to_dim_age_group_age_group_code",
+      "fromTable": "fact_healthcare_workers",
+      "fromColumn": "age_group_code",
+      "toTable": "dim_age_group",
+      "toColumn": "age_group_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_healthcare_workers_sex_code_to_dim_gender_sex_code",
+      "fromTable": "fact_healthcare_workers",
+      "fromColumn": "sex_code",
+      "toTable": "dim_gender",
+      "toColumn": "sex_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_healthcare_workers_year_to_dim_date_year",
+      "fromTable": "fact_healthcare_workers",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_retirement_country_code_to_dim_country_country_code",
+      "fromTable": "fact_retirement",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_retirement_profession_code_to_dim_profession_profession_code",
+      "fromTable": "fact_retirement",
+      "fromColumn": "profession_code",
+      "toTable": "dim_profession",
+      "toColumn": "profession_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_retirement_age_group_code_to_dim_age_group_age_group_code",
+      "fromTable": "fact_retirement",
+      "fromColumn": "age_group_code",
+      "toTable": "dim_age_group",
+      "toColumn": "age_group_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_retirement_year_to_dim_date_year",
+      "fromTable": "fact_retirement",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_staffing_shortage_country_code_to_dim_country_country_code",
+      "fromTable": "fact_staffing_shortage",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_staffing_shortage_profession_code_to_dim_profession_profession_code",
+      "fromTable": "fact_staffing_shortage",
+      "fromColumn": "profession_code",
+      "toTable": "dim_profession",
+      "toColumn": "profession_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_staffing_shortage_year_to_dim_date_year",
+      "fromTable": "fact_staffing_shortage",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_population_country_code_to_dim_country_country_code",
+      "fromTable": "fact_population",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_population_sex_code_to_dim_gender_sex_code",
+      "fromTable": "fact_population",
+      "fromColumn": "sex_code",
+      "toTable": "dim_gender",
+      "toColumn": "sex_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_population_year_to_dim_date_year",
+      "fromTable": "fact_population",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_population_nuts_nuts_code_to_dim_region_nuts_code",
+      "fromTable": "fact_population_nuts",
+      "fromColumn": "nuts_code",
+      "toTable": "dim_region",
+      "toColumn": "nuts_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_population_nuts_age_group_code_to_dim_age_group_age_group_code",
+      "fromTable": "fact_population_nuts",
+      "fromColumn": "age_group_code",
+      "toTable": "dim_age_group",
+      "toColumn": "age_group_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_population_nuts_sex_code_to_dim_gender_sex_code",
+      "fromTable": "fact_population_nuts",
+      "fromColumn": "sex_code",
+      "toTable": "dim_gender",
+      "toColumn": "sex_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_population_nuts_year_to_dim_date_year",
+      "fromTable": "fact_population_nuts",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_regional_workforce_country_code_to_dim_country_country_code",
+      "fromTable": "fact_regional_workforce",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_regional_workforce_profession_code_to_dim_profession_profession_code",
+      "fromTable": "fact_regional_workforce",
+      "fromColumn": "profession_code",
+      "toTable": "dim_profession",
+      "toColumn": "profession_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_regional_workforce_year_to_dim_date_year",
+      "fromTable": "fact_regional_workforce",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_hospital_capacity_country_code_to_dim_country_country_code",
+      "fromTable": "fact_hospital_capacity",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_hospital_capacity_year_to_dim_date_year",
+      "fromTable": "fact_hospital_capacity",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_population_indicators_country_code_to_dim_country_country_code",
+      "fromTable": "fact_population_indicators",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": true
+    },
+    {
+      "name": "fact_population_indicators_sex_code_to_dim_gender_sex_code",
+      "fromTable": "fact_population_indicators",
+      "fromColumn": "sex_code",
+      "toTable": "dim_gender",
+      "toColumn": "sex_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_population_indicators_year_to_dim_date_year",
+      "fromTable": "fact_population_indicators",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_forecast_country_code_to_dim_country_country_code",
+      "fromTable": "fact_forecast",
+      "fromColumn": "country_code",
+      "toTable": "dim_country",
+      "toColumn": "country_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_forecast_profession_code_to_dim_profession_profession_code",
+      "fromTable": "fact_forecast",
+      "fromColumn": "profession_code",
+      "toTable": "dim_profession",
+      "toColumn": "profession_code",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    },
+    {
+      "name": "fact_forecast_year_to_dim_date_year",
+      "fromTable": "fact_forecast",
+      "fromColumn": "year",
+      "toTable": "dim_date",
+      "toColumn": "year",
+      "type": "single",
+      "crossFilteringBehavior": "oneDirection",
+      "isActive": false
+    }
+  ]
+}

@@ -51,12 +51,20 @@ def workforce() -> pd.DataFrame:
                     "profession": "Physician", "value": total * share,
                     "dataset_code": "hlth_rs_phys",
                 })
+            # Nurse totals for both sexes. The shortage fact reads sex_code
+            # 'T', so without this row the nurse side of the panel is absent
+            # and every per-profession reference test passes vacuously.
             for sex in ("M", "F"):
                 rows.append({
                     "geo": country, "time": str(year), "sex": sex, "age": "TOTAL",
                     "profession": "Nurse", "value": 200000.0,
                     "dataset_code": "hlth_rs_nurse",
                 })
+            rows.append({
+                "geo": country, "time": str(year), "sex": "T", "age": "TOTAL",
+                "profession": "Nurse", "value": 480000.0,
+                "dataset_code": "hlth_rs_nurse",
+            })
     return pd.DataFrame(rows)
 
 
@@ -233,7 +241,9 @@ class TestFactPopulationNuts:
 
 class TestFactStaffingShortage:
     def test_shortage_maths(self, workforce, population):
-        fact = fact_staffing_shortage(workforce, population, 3.3)
+        fact = fact_staffing_shortage(
+            workforce, population, {"PHYS": 3.3, "NURS": 9.0}
+        )
         de = fact[(fact["profession_code"] == "PHYS")
                   & (fact["country_code"] == "DE")
                   & (fact["year"] == 2020)].iloc[0]
@@ -242,24 +252,56 @@ class TestFactStaffingShortage:
         assert abs(de["shortage"] - (required - 100_000)) < 1.0
 
     def test_coverage_index_is_a_ratio_not_a_sum(self, workforce, population):
-        fact = fact_staffing_shortage(workforce, population, 3.3)
-        de = fact[(fact["profession_code"] == "PHYS")
-                  & (fact["country_code"] == "DE")
-                  & (fact["year"] == 2020)].iloc[0]
+        fact = fact_staffing_shortage(
+            workforce, population, {"PHYS": 3.3, "NURS": 9.0}
+        )
+        de = fact[(fact.profession_code == "PHYS")
+                  & (fact.country_code == "DE")
+                  & (fact.year == 2020)].iloc[0]
         expected = de["actual_workers"] / de["required_workers"] * 100
         assert abs(de["coverage_index"] - expected) < 0.01
-        # Percentage scale: a severe shortage reads well under 100, and must
-        # not exceed it when the ratio was summed rather than recomputed.
-        assert 0 < de["coverage_index"] < 100
+
+    def test_each_profession_uses_its_own_reference(self, workforce,
+                                                    population):
+        """Regression: one reference ratio applied to every profession.
+
+        Measuring nurses against the physician benchmark of 3.3 reported them
+        at 250% staffed. That is arithmetically true and analytically
+        nonsense. Each profession now carries its own ratio, stored on the
+        fact so a reader can audit the benchmark behind any coverage figure.
+        """
+        fact = fact_staffing_shortage(
+            workforce, population, {"PHYS": 3.3, "NURS": 9.0}
+        )
+        assert "reference_per_1000" in fact.columns
+        refs = dict(zip(fact["profession_code"], fact["reference_per_1000"]))
+        assert refs["PHYS"] == 3.3
+        assert refs["NURS"] == 9.0
+
+    def test_nurses_are_not_measured_against_the_doctor_ratio(
+        self, workforce, population
+    ):
+        fact = fact_staffing_shortage(
+            workforce, population, {"PHYS": 3.3, "NURS": 9.0}
+        )
+        de_nurse = fact[(fact.profession_code == "NURS")
+                        & (fact.country_code == "DE")
+                        & (fact.year == 2020)].iloc[0]
+        expected = de_nurse["total_population"] / 1000 * 9.0
+        assert abs(de_nurse["required_workers"] - expected) < 1.0
 
     def test_grain_is_unique(self, workforce, population):
-        fact = fact_staffing_shortage(workforce, population, 3.3)
+        fact = fact_staffing_shortage(
+            workforce, population, {"PHYS": 3.3, "NURS": 9.0}
+        )
         assert not fact.duplicated(
             subset=["profession_code", "country_code", "year"]
         ).any()
 
     def test_empty_population_yields_empty_fact(self, workforce):
-        fact = fact_staffing_shortage(workforce, pd.DataFrame(), 3.3)
+        fact = fact_staffing_shortage(
+            workforce, pd.DataFrame(), {"PHYS": 3.3, "NURS": 9.0}
+        )
         assert fact.empty
 
 

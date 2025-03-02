@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Power BI report preview — EU Health Workforce</title>
+<link rel="stylesheet" href="preview.css"></head>
+<body><div class="wrap">
+<header>
+  <p class="eyebrow">Power BI Project preview</p>
+  <h1>EU Healthcare Workforce — 8-page report</h1>
+  <p class="sub">A rendered preview of <code>powerbi/pbip/EU-Health-Workforce.pbip</code>,
+    computed from the same warehouse tables and the same measures the Power BI
+    model binds to.</p>
+  <span class="badge">Preview — not a Power BI screenshot</span>
+</header>
+<nav>
+  <a href="#overview">1. Executive overview</a>
+  <a href="#coverage">2. Workforce map</a>
+  <a href="#retirement">3-4. Doctor &amp; nurse</a>
+  <a href="#aging">5. Workforce aging</a>
+  <a href="#capacity">6. Hospital capacity</a>
+  <a href="#deserts">7. Medical deserts</a>
+  <a href="#forecast">8. Forecasting</a>
+</nav>
+
+<section id="overview"><h2>1. Executive overview</h2>
+  <p class="note">KPI cards from the report's measure set.</p>
+  <div class="grid g4" id="k1"></div>
+</section>
+
+<section id="coverage"><h2>2. Workforce map — coverage by country</h2>
+  <p class="note">Physicians per 1,000 population; marker is the OECD
+    reference ratio of 3.3.</p>
+  <div class="panel" id="cov"></div>
+  <div class="caveat"><strong>Provenance.</strong> Regional coverage in the
+    report is observed and verified against national totals for 12 countries,
+    and effectively ends in 2015. The population denominator is a 2023
+    snapshot, so rates are indicative rather than same-year.</div>
+</section>
+
+<section id="retirement"><h2>3. Doctor shortage &mdash; retirement exposure</h2>
+  <p class="note">Share of physicians aged 55 or over; shaded above 50%.</p>
+  <div class="panel" id="ret"></div>
+</section>
+
+<section id="aging"><h2>4-5. Nurse workforce &amp; aging</h2>
+  <p class="note">Replacement demand and retirement exposure by country.</p>
+  <div class="grid g4" id="k5"></div>
+</section>
+
+<section id="capacity"><h2>6. Hospital capacity risk</h2>
+  <p class="note">Beds, ICU intensity and the composite risk score.</p>
+  <div class="grid g4" id="k6"></div>
+  <div class="caveat"><strong>Assumption.</strong> The hospital risk score
+    weights are stated assumptions, not fitted parameters, and need domain
+    review before informing a funding decision.</div>
+</section>
+
+<section id="deserts"><h2>7. Medical desert detection</h2>
+  <p class="note">Lowest observed regional coverage, verified per region.</p>
+  <div class="panel" id="des"></div>
+</section>
+
+<section id="forecast"><h2>8. Forecasting centre</h2>
+  <p class="note">Seven model families compared under identical walk-forward
+    validation, then the champion applied forward.</p>
+  <div class="grid g4" id="k8"></div>
+  <div class="panel" id="fc" style="margin-top:12px"></div>
+  <div class="panel" style="margin-top:12px" id="mape"></div>
+  <div class="caveat"><strong>Model result.</strong> Every tree-based model
+    lost to the naive baseline. Short, near-linear series cannot be
+    extrapolated past a training range, so a gradient-boosted forecast would
+    look more sophisticated and be worse.</div>
+</section>
+
+<footer>Preview generated from the same warehouse and measures as the PBIP.
+Open <code>powerbi/pbip/EU-Health-Workforce.pbip</code> in Power BI Desktop
+for the authoritative rendering.</footer>
+</div>
+<script src="data.js"></script><script src="preview.js"></script></body></html>

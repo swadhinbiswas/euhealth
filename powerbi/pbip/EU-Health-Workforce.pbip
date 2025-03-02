@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "name": "EU-Health-Workforce",
+  "report": {
+    "path": "EU-Health-Workforce.Report"
+  },
+  "settings": {
+    "enableAutoRecovery": false,
+    "typeEncoding": true
+  }
+}

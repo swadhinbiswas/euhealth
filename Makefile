@@ -1,4 +1,4 @@
-.PHONY: help setup ingest geo warehouse regional forecast views export-data site screenshots test lint fmt check all clean
+.PHONY: help setup ingest geo warehouse regional forecast views pbip preview-pbip export-data site screenshots test lint fmt check all clean
 
 PY := .venv/bin/python
 
@@ -8,6 +8,8 @@ help:
 	@echo "geo        install NUTS 2021 boundaries for map visuals"
 	@echo "warehouse  quality gate + build gold star schema into DuckDB"
 	@echo "views      rebuild every SQL view (semantic layer)"
+	@echo "pbip       generate the Power BI Project (model + 8-page report)"
+	@echo "preview-pbip  render the report preview and screenshot it"
 	@echo "site       generate the static dashboard from the warehouse"
 	@echo "screenshots  capture the dashboard for the README (needs chromium)"
 	@echo "regional   build observed NUTS workforce (level-harmonised)"
@@ -40,6 +42,16 @@ forecast:
 views:
 	$(PY) scripts/build_views.py
 
+# Generate the Power BI Project: semantic model + 8-page report.
+pbip:
+	PYTHONPATH=src $(PY) -m src.powerbi.generate_pbip
+	PYTHONPATH=src $(PY) -m src.powerbi.generate_report
+
+# Render the PBIP report's content to HTML and screenshot it. Power BI
+# Desktop is Windows-only, so this is a preview, not a Desktop capture.
+preview-pbip:
+	$(PY) scripts/preview_pbip.py
+
 export-data:
 	PYTHONPATH=src $(PY) -m src.dashboard.export
 
@@ -62,7 +74,7 @@ fmt:
 
 check: lint test
 
-all: ingest geo warehouse regional forecast views site check
+all: ingest geo warehouse regional forecast views pbip site check
 
 clean:
 	rm -rf .pytest_cache .ruff_cache src/__pycache__ src/*/__pycache__ \

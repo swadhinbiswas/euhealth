@@ -1,0 +1,53 @@
+{
+  "name": "EU Health Workforce",
+  "dataColors": [
+    "#1F4E79",
+    "#2D7D9A",
+    "#6C9BCF",
+    "#8FB8DE",
+    "#B0CEE6",
+    "#A4243B",
+    "#D1603D",
+    "#E8B04B",
+    "#4E8C6D"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#0F1722",
+  "tableAccent": "#1F4E79",
+  "good": {
+    "fg": "#2D7D5F",
+    "bg": "#E7F3ED"
+  },
+  "neutral": {
+    "fg": "#6B7280",
+    "bg": "#F1F3F6"
+  },
+  "bad": {
+    "fg": "#A4243B",
+    "bg": "#FAEAEC"
+  },
+  "maximum": {
+    "fg": "#A4243B",
+    "bg": "#FAEAEC"
+  },
+  "center": {
+    "fg": "#E8B04B",
+    "bg": "#FDF6E6"
+  },
+  "minimum": {
+    "fg": "#4E8C6D",
+    "bg": "#EAF3EE"
+  },
+  "textClasses": {
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 11,
+      "color": "#5B6472"
+    },
+    "callout": {
+      "fontFace": "Segoe UI",
+      "fontSize": 28,
+      "color": "#0F1722"
+    }
+  }
+}

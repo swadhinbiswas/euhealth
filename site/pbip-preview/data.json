@@ -1,0 +1,443 @@
+{
+ "year": 2024,
+ "forecast_year": 2030,
+ "measures": {
+  "Total Doctors": 2034713,
+  "Total Nurses": 2513918,
+  "Workforce Gap": -339567.7443999999,
+  "Workforce Gap %": -8.1,
+  "Coverage Index": 108.1,
+  "Retirement Risk %": 28.8,
+  "Retirement Exposure 65+": 9.8,
+  "Replacement Demand": 1311864,
+  "Hospital Beds": null,
+  "ICU Beds": 196816.0,
+  "Hospital Readiness": 80.86,
+  "Countries Reporting Nurses": 21,
+  "Critical Desert Regions": 113,
+  "Population In Deserts": 147631281,
+  "Healthcare Access Score": 3.98,
+  "Regional Coverage": 3.98,
+  "Medical Desert Score": 42.0,
+  "Worker to Population Ratio": null,
+  "Forecast Workers": 5723948.0,
+  "Baseline Forecast": 5297447.0,
+  "Model Uplift": 426501.0,
+  "Shortage Severity Rank": 13
+ },
+ "coverage": [
+  {
+   "country_name": "Belgium",
+   "physicians_per_1000": 3.351923349019082
+  },
+  {
+   "country_name": "Latvia",
+   "physicians_per_1000": 3.3855448944013413
+  },
+  {
+   "country_name": "Estonia",
+   "physicians_per_1000": 3.5724495830687277
+  },
+  {
+   "country_name": "Slovenia",
+   "physicians_per_1000": 3.5749445961273083
+  },
+  {
+   "country_name": "Finland",
+   "physicians_per_1000": 3.631609762643582
+  },
+  {
+   "country_name": "Hungary",
+   "physicians_per_1000": 3.706560516126501
+  },
+  {
+   "country_name": "Romania",
+   "physicians_per_1000": 3.809975636127004
+  },
+  {
+   "country_name": "Poland",
+   "physicians_per_1000": 3.8555232152507157
+  },
+  {
+   "country_name": "Ireland",
+   "physicians_per_1000": 3.9167132719607167
+  },
+  {
+   "country_name": "France",
+   "physicians_per_1000": 3.944615543862445
+  },
+  {
+   "country_name": "Slovakia",
+   "physicians_per_1000": 3.9454810941165825
+  },
+  {
+   "country_name": "Netherlands",
+   "physicians_per_1000": 3.9672423842199347
+  },
+  {
+   "country_name": "Croatia",
+   "physicians_per_1000": 4.108010244520473
+  },
+  {
+   "country_name": "Czechia",
+   "physicians_per_1000": 4.295836312921682
+  },
+  {
+   "country_name": "Portugal",
+   "physicians_per_1000": 4.335731953999567
+  },
+  {
+   "country_name": "Malta",
+   "physicians_per_1000": 4.6251351068342315
+  },
+  {
+   "country_name": "Spain",
+   "physicians_per_1000": 4.66204076352186
+  },
+  {
+   "country_name": "Sweden",
+   "physicians_per_1000": 4.666733069824626
+  },
+  {
+   "country_name": "Bulgaria",
+   "physicians_per_1000": 4.667766455288597
+  },
+  {
+   "country_name": "Lithuania",
+   "physicians_per_1000": 4.673426681742312
+  },
+  {
+   "country_name": "Denmark",
+   "physicians_per_1000": 4.676536745906772
+  },
+  {
+   "country_name": "Germany",
+   "physicians_per_1000": 4.757498393315906
+  },
+  {
+   "country_name": "Cyprus",
+   "physicians_per_1000": 5.54345407791052
+  },
+  {
+   "country_name": "Austria",
+   "physicians_per_1000": 5.646949638324007
+  },
+  {
+   "country_name": "Italy",
+   "physicians_per_1000": 5.752906968364065
+  },
+  {
+   "country_name": "Greece",
+   "physicians_per_1000": 6.740419307917952
+  }
+ ],
+ "retirement": [
+  {
+   "country_name": "Bulgaria",
+   "pct_55_plus": 54.6,
+   "pct_65_plus": 23.4
+  },
+  {
+   "country_name": "Latvia",
+   "pct_55_plus": 45.6,
+   "pct_65_plus": 21.1
+  },
+  {
+   "country_name": "Estonia",
+   "pct_55_plus": 45.1,
+   "pct_65_plus": 23.2
+  },
+  {
+   "country_name": "Hungary",
+   "pct_55_plus": 44.3,
+   "pct_65_plus": 25.2
+  },
+  {
+   "country_name": "Italy",
+   "pct_55_plus": 44.3,
+   "pct_65_plus": 23.3
+  },
+  {
+   "country_name": "Poland",
+   "pct_55_plus": 40.1,
+   "pct_65_plus": 19.6
+  },
+  {
+   "country_name": "Czechia",
+   "pct_55_plus": 40.1,
+   "pct_65_plus": 21.9
+  },
+  {
+   "country_name": "Lithuania",
+   "pct_55_plus": 39.7,
+   "pct_65_plus": 18.1
+  },
+  {
+   "country_name": "Cyprus",
+   "pct_55_plus": 38.3,
+   "pct_65_plus": 20.7
+  },
+  {
+   "country_name": "Belgium",
+   "pct_55_plus": 38.1,
+   "pct_65_plus": 18.2
+  },
+  {
+   "country_name": "France",
+   "pct_55_plus": 34.1,
+   "pct_65_plus": 16.2
+  },
+  {
+   "country_name": "Greece",
+   "pct_55_plus": 33.3,
+   "pct_65_plus": 13.0
+  },
+  {
+   "country_name": "Austria",
+   "pct_55_plus": 33.2,
+   "pct_65_plus": 10.8
+  },
+  {
+   "country_name": "Germany",
+   "pct_55_plus": 32.2,
+   "pct_65_plus": 9.9
+  }
+ ],
+ "deserts": [
+  {
+   "nuts_code": "NL23",
+   "region_name": "Netherlands",
+   "workers_per_1000": 1.23,
+   "access_tier": "Critical",
+   "year": 2020
+  },
+  {
+   "nuts_code": "NL34",
+   "region_name": "Netherlands",
+   "workers_per_1000": 1.58,
+   "access_tier": "Critical",
+   "year": 2020
+  },
+  {
+   "nuts_code": "HU31",
+   "region_name": "Hungary",
+   "workers_per_1000": 2.08,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "HU21",
+   "region_name": "Hungary",
+   "workers_per_1000": 2.19,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "HU12",
+   "region_name": "Hungary",
+   "workers_per_1000": 2.27,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "BE34",
+   "region_name": "Belgium",
+   "workers_per_1000": 2.27,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "NL12",
+   "region_name": "Netherlands",
+   "workers_per_1000": 2.34,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "BE32",
+   "region_name": "Belgium",
+   "workers_per_1000": 2.49,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "HU22",
+   "region_name": "Hungary",
+   "workers_per_1000": 2.5,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "BE22",
+   "region_name": "Belgium",
+   "workers_per_1000": 2.5,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "BE25",
+   "region_name": "Belgium",
+   "workers_per_1000": 2.52,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "CZ02",
+   "region_name": "Czechia",
+   "workers_per_1000": 2.55,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "NL41",
+   "region_name": "Netherlands",
+   "workers_per_1000": 2.58,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "BE21",
+   "region_name": "Belgium",
+   "workers_per_1000": 2.62,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "ES42",
+   "region_name": "Spain",
+   "workers_per_1000": 2.62,
+   "access_tier": "High",
+   "year": 2020
+  },
+  {
+   "nuts_code": "NL21",
+   "region_name": "Netherlands",
+   "workers_per_1000": 2.64,
+   "access_tier": "High",
+   "year": 2020
+  }
+ ],
+ "forecast": [
+  {
+   "country_name": "Germany",
+   "profession": "nurses",
+   "year": 2030,
+   "forecast": 1028295.0,
+   "baseline": 1045000.0
+  },
+  {
+   "country_name": "France",
+   "profession": "nurses",
+   "year": 2030,
+   "forecast": 633593.0,
+   "baseline": 607644.0
+  },
+  {
+   "country_name": "Germany",
+   "profession": "physicians",
+   "year": 2030,
+   "forecast": 448758.0,
+   "baseline": 397042.0
+  },
+  {
+   "country_name": "Italy",
+   "profession": "nurses",
+   "year": 2030,
+   "forecast": 407750.0,
+   "baseline": 407750.0
+  },
+  {
+   "country_name": "Italy",
+   "profession": "physicians",
+   "year": 2030,
+   "forecast": 394931.0,
+   "baseline": 339256.0
+  },
+  {
+   "country_name": "Spain",
+   "profession": "nurses",
+   "year": 2030,
+   "forecast": 280177.0,
+   "baseline": 280200.0
+  },
+  {
+   "country_name": "Bulgaria",
+   "profession": "physicians",
+   "year": 2030,
+   "forecast": 272704.0,
+   "baseline": 30086.0
+  },
+  {
+   "country_name": "France",
+   "profession": "physicians",
+   "year": 2030,
+   "forecast": 272527.0,
+   "baseline": 270874.0
+  },
+  {
+   "country_name": "Spain",
+   "profession": "physicians",
+   "year": 2030,
+   "forecast": 240870.0,
+   "baseline": 226667.0
+  },
+  {
+   "country_name": "Netherlands",
+   "profession": "nurses",
+   "year": 2030,
+   "forecast": 202089.0,
+   "baseline": 202089.0
+  },
+  {
+   "country_name": "Poland",
+   "profession": "physicians",
+   "year": 2030,
+   "forecast": 142081.0,
+   "baseline": 141193.0
+  },
+  {
+   "country_name": "Belgium",
+   "profession": "nurses",
+   "year": 2030,
+   "forecast": 137552.0,
+   "baseline": 134656.0
+  }
+ ],
+ "model_mape": [
+  {
+   "model": "arima",
+   "mape": 4.993,
+   "smape": 5.214
+  },
+  {
+   "model": "naive",
+   "mape": 5.495,
+   "smape": 5.728
+  },
+  {
+   "model": "prophet",
+   "mape": 5.741,
+   "smape": 5.909
+  },
+  {
+   "model": "drift",
+   "mape": 6.156,
+   "smape": 6.257
+  },
+  {
+   "model": "randomforest",
+   "mape": 13.963,
+   "smape": 13.934
+  },
+  {
+   "model": "xgboost",
+   "mape": 20.39,
+   "smape": 21.708
+  },
+  {
+   "model": "lightgbm",
+   "mape": 52.289,
+   "smape": 37.848
+  }
+ ]
+}

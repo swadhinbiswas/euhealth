@@ -27,6 +27,24 @@ make test       # 239 tests
 **To load into Power BI:** connect to `data/healthcare_dw.duckdb`, or publish
 Parquet exports. Full instructions in [`docs/POWERBI.md`](docs/POWERBI.md).
 
+## Power BI
+
+The dashboard is a **Power BI Project** in [`powerbi/pbip/`](powerbi/pbip/) —
+not a `.pbix`, which cannot be written from a command line, and not a
+specification. Open it in Power BI Desktop and it is a working report: 44 DAX
+measures, 30 relationships, 8 pages, 63 visuals, live DuckDB source.
+
+```bash
+make pbip          # regenerate from the warehouse
+# Power BI Desktop: File → Open → powerbi/pbip/EU-Health-Workforce.pbip
+```
+
+![Preview of the 8-page report](docs/images/powerbi-report-preview.png)
+
+The image above is a **preview rendered from the same warehouse tables and the
+same measures the Power BI model binds to** — not a Power BI screenshot, which
+cannot be captured on Linux. That distinction is stated on the artefact itself.
+
 ## Dashboard
 
 A static dashboard generated from the warehouse by `make site`. Every figure
@@ -160,10 +178,12 @@ Stated up front rather than buried.
    and 2,240 verified rows remain, 100% reconciled; 54% of physician and 12% of nurse
    country-years reconcile between the two Eurostat tables. Regional rates are
    indicative rather than same-year, because the denominator is a 2023 snapshot.
-2. **No `.pbix` binary** is generated — the format cannot be written from the
-   command line. `powerbi/measures.dax` (42 measures) plus `docs/POWERBI.md`
-   (relationship model, 8 page specs, formatting, accessibility) is the
-   deliverable.
+2. **Power BI screenshots cannot be captured on this host.** Power BI Desktop is
+   Windows-only. What exists instead is `powerbi/pbip/` — a **Power BI Project**
+   that Desktop opens directly (44 measures, 30 relationships, 8 pages, 63
+   visuals) — plus a rendered preview computed from the same tables and
+   measures. Opening the PBIP in Desktop is the only step between this repo and
+   an authoritative screenshot.
 3. **EURES has no public API**, so `fact_job_vacancies` is built from labour
    market, training-origin and graduation proxies, flagged `data_basis`.
 4. **OECD SDMX and several national portals were unreachable** from the build
@@ -182,12 +202,13 @@ src/quality/     data quality framework
 src/ml/          7 forecast models, walk-forward evaluation
 src/geo/         NUTS level harmonisation, regional CLI
 src/dashboard/   warehouse -> JSON export for the static site
+src/powerbi/     PBIP generator (semantic model + 8-page report)
 sql/             22 semantic views (analytics, integrity, Power BI measures)
-powerbi/         42 DAX measures + semantic-layer README
-site/            static dashboard (generated)
+powerbi/         DAX measure library + generated PBIP project
+site/            static dashboard and PBIP preview (generated)
 scripts/         ingest, views, geography, site build, screenshots
 docs/            plan, findings, forecasting, regional, PowerBI, deploy
-tests/           239 tests
+tests/           299 tests
 ```
 
 `src/ingestion/registry.py` records every dataset's verified dimensions, plus a
