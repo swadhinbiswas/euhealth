@@ -70,7 +70,12 @@ six countries with no nurse data, 12 verified regional countries ending ~2015,
 and the finding that every tree-based model lost to the naive baseline.
 
 Deploy it as static files — no build step, no server. GitHub Pages works via the
-included workflow; Cloudflare Pages via `wrangler pages deploy site`. See
+included workflow; Cloudflare Pages via `wrangler pages deploy site`.
+
+**Where each artefact goes:** the dashboard to Cloudflare Pages or GitHub
+Pages; the PBIP to Power BI Service (Cloudflare cannot execute DAX); the 9 MB
+DuckDB warehouse to object storage with a scheduled refresh. Full breakdown,
+including a Power BI pipeline for CI-driven publication, in
 [`docs/DEPLOY.md`](docs/DEPLOY.md).
 
 ## What the data actually says
