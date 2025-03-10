@@ -23,3 +23,5 @@ data/logs/*.log
 
 # OS
 .DS_Store
+# Local tool state
+.wrangler/
