@@ -1,4 +1,4 @@
-.PHONY: help setup ingest geo warehouse regional forecast views pbip preview-pbip export-data site screenshots test lint fmt check all clean
+.PHONY: help setup ingest geo warehouse regional forecast views pbip preview-pbip export-data site screenshots readme-charts test lint fmt check all clean
 
 PY := .venv/bin/python
 
@@ -62,6 +62,10 @@ site: export-data
 # Screenshot the site for the README. Requires chromium on PATH.
 screenshots:
 	$(PY) scripts/screenshot_site.py
+
+# Animated SVG data charts for the README.
+readme-charts:
+	PYTHONPATH=src $(PY) scripts/build_readme_charts.py
 
 test:
 	PYTHONPATH=src $(PY) -m pytest -q

@@ -1,11 +1,20 @@
-# EU Healthcare Workforce Crisis Analytics & Forecasting Platform
+<h1 align="center">
+  <img src="docs/images/mascot.svg" width="72" alt="EU Healthcare Workforce Platform mascot" align="center">
+  <br>EU Healthcare Workforce Crisis Analytics &amp; Forecasting Platform
+</h1>
 
-A medallion data platform for the European health-workforce shortage: live
-Eurostat ingestion, a dimensional warehouse, a data-quality framework, and a
-seven-model forecast comparison.
+<p align="center"><em>A medallion data platform for the European health-workforce shortage — live Eurostat ingestion, a dimensional warehouse, a data-quality framework, and a seven-model forecast comparison.</em></p>
 
-Everything here runs against **live public data**. No synthetic or mocked
-figures appear in any result.
+<p align="center">
+  <a href="docs/PLAN.md">Plan</a> ·
+  <a href="docs/FINDINGS.md">Findings</a> ·
+  <a href="docs/FORECASTING.md">Forecasting</a> ·
+  <a href="docs/REGIONAL.md">Regional</a> ·
+  <a href="docs/POWERBI.md">Power BI</a> ·
+  <a href="docs/DEPLOY.md">Deploy</a>
+</p>
+
+Everything here runs against **live public data**. No synthetic or mocked figures appear in any result.
 
 ```bash
 make setup      # create the environment
@@ -21,7 +30,7 @@ make warehouse  # quality gate + star schema into DuckDB
 make regional   # observed NUTS-level workforce, level-harmonised
 make forecast   # 7 model families, walk-forward validated
 make views      # build all 22 semantic views (fails loudly if any is broken)
-make test       # 239 tests
+make test       # 299 tests
 ```
 
 **To load into Power BI:** connect to `data/healthcare_dw.duckdb`, or publish
@@ -94,6 +103,8 @@ Full detail: [`docs/FINDINGS.md`](docs/FINDINGS.md),
 
 ## Architecture
 
+![EU Healthcare Workforce Analytics Platform — architecture](docs/images/architecture.png)
+
 ```text
 Sources (Eurostat, GISCO NUTS 2021)
    |  retry, backoff, sha256 manifest, byte-exact capture
@@ -116,6 +127,22 @@ SERVING      SQL views, ML forecasts, GIS
 
 Layer contract: **raw** never transforms · **bronze** never cross-joins ·
 **silver** never presents aggregates · **gold** holds no raw codes.
+
+### Live data snapshots
+
+Animated SVG charts generated from the warehouse (`scripts/build_readme_charts.py`). Values are real.
+
+**Germany physicians per 1,000 (2014–2024)**
+
+![Coverage trend](docs/images/chart-coverage-trend.svg)
+
+**Retirement exposure — share of physicians aged 55+ (most recent year)**
+
+![Retirement exposure](docs/images/chart-retirement.svg)
+
+**Forecast model comparison — MAPE % (lower is better)**
+
+![Model comparison](docs/images/chart-model-mape.svg)
 
 ## Warehouse
 

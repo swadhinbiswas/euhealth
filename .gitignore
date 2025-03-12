@@ -25,3 +25,5 @@ data/logs/*.log
 .DS_Store
 # Local tool state
 .wrangler/
+
+# generated site + preview data live under version control only where referenced
