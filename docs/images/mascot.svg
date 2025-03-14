@@ -1,24 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="Mascot">
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 200 200" role="img" aria-label="EU Healthcare Workforce mascot">
   <defs>
-    <radialGradient id="g" cx="50%" cy="40%" r="60%">
+    <radialGradient id="faceBg" cx="50%" cy="38%" r="65%">
       <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#e8f0f8"/>
+      <stop offset="100%" stop-color="#dcebf7"/>
     </radialGradient>
+    <linearGradient id="cross" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c22e47"/>
+      <stop offset="100%" stop-color="#a4243b"/>
+    </linearGradient>
   </defs>
-  <circle cx="100" cy="104" r="70" fill="url(#g)" stroke="#1F4E79" stroke-width="3">
-    <animate attributeName="r" values="70;74;70;70" dur="2s" repeatCount="indefinite"/>
+
+  <!-- soft shadow -->
+  <ellipse cx="100" cy="176" rx="46" ry="7" fill="#1F4E79" opacity="0.12"/>
+
+  <!-- head -->
+  <circle cx="100" cy="98" r="62" fill="url(#faceBg)" stroke="#1F4E79" stroke-width="4">
+    <animate attributeName="r" values="62;64;62;62" dur="2.4s" repeatCount="indefinite"/>
   </circle>
-  <!-- hospital cross -->
-  <g transform="translate(100,94)">
-    <rect x="-24" y="-9" width="48" height="18" rx="4" fill="#A4243B"/>
-    <rect x="-9" y="-24" width="18" height="48" rx="4" fill="#A4243B"/>
+
+  <!-- little cap/headband -->
+  <path d="M 52 72 a 62 62 0 0 1 96 0" fill="none" stroke="#1F4E79" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- eyes (blinking) -->
+  <g fill="#243040">
+    <circle cx="80" cy="96" r="6">
+      <animate attributeName="ry" values="6;1;6" dur="4s" begin="0.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="120" cy="96" r="6">
+      <animate attributeName="ry" values="6;1;6" dur="4s" begin="0.4s" repeatCount="indefinite"/>
+    </circle>
   </g>
-  <!-- face -->
-  <circle cx="76" cy="140" r="5" fill="#3A4454">
-    <animate attributeName="ry" values="5;0.6;5" dur="3s" begin="0.5s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="124" cy="140" r="5" fill="#3A4454">
-    <animate attributeName="ry" values="5;0.6;5" dur="3s" begin="0.5s" repeatCount="indefinite"/>
-  </circle>
-  <path d="M 84 156 Q 100 166 116 156" fill="none" stroke="#3A4454" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="78" cy="94" r="1.8" fill="#ffffff"/>
+  <circle cx="118" cy="94" r="1.8" fill="#ffffff"/>
+
+  <!-- blushing cheeks -->
+  <circle cx="68" cy="112" r="6" fill="#a4243b" opacity="0.18"/>
+  <circle cx="132" cy="112" r="6" fill="#a4243b" opacity="0.18"/>
+
+  <!-- smile -->
+  <path d="M 84 114 Q 100 126 116 114" fill="none" stroke="#243040" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- red cross badge on the chest area -->
+  <g transform="translate(100,138)">
+    <rect x="-27" y="-11" width="54" height="22" rx="6" fill="url(#cross)"/>
+    <rect x="-11" y="-27" width="22" height="54" rx="6" fill="url(#cross)"/>
+  </g>
+
+  <!-- little stethoscope -->
+  <path d="M 138 150 q 12 10 4 24" fill="none" stroke="#1F4E79" stroke-width="3.4" stroke-linecap="round"/>
+  <circle cx="143" cy="176" r="4.5" fill="#fff" stroke="#1F4E79" stroke-width="3"/>
 </svg>

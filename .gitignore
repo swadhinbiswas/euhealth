@@ -27,3 +27,6 @@ data/logs/*.log
 .wrangler/
 
 # generated site + preview data live under version control only where referenced
+
+# local command-code state
+.commandcode/taste/
