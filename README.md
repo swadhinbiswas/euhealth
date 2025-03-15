@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="docs/images/mascot.svg" width="120" alt="EU Healthcare Workforce Platform mascot" align="center">
+  <img src="docs/images/mascot.svg" width="140" alt="EU Healthcare Workforce Platform mascot" align="center">
   <br>EU Healthcare Workforce Crisis Analytics &amp; Forecasting Platform
 </h1>
 
@@ -11,6 +11,7 @@
   <a href="docs/FORECASTING.md">Forecasting</a> ·
   <a href="docs/REGIONAL.md">Regional</a> ·
   <a href="docs/POWERBI.md">Power BI</a> ·
+  <a href="docs/FABRIC.md">Fabric</a> ·
   <a href="docs/DEPLOY.md">Deploy</a>
 </p>
 
@@ -32,7 +33,7 @@ make forecast   # 7 model families, walk-forward validated
 make views      # build all 22 semantic views (fails loudly if any is broken)
 make pbip       # generate the Power BI Project (model + 8-page report)
 make site       # generate the static dashboard
-make test       # 299 tests
+make test       # 313 tests
 ```
 
 **To load into Power BI:** connect to `data/healthcare_dw.duckdb`, or publish
@@ -174,6 +175,12 @@ Stated up front rather than buried.
 5. **National portal coverage is NL + DE**, not 13 countries.
 6. **Forward regional projections to 2030+ still need an explicit allocation assumption.** Observed regional supply effectively ends ~2015.
 
+## Microsoft Fabric
+
+The warehouse exports to a Fabric Lakehouse layout by `make fabric-export` into `data/export/fabric_lakehouse/`. The `Tables/`Folder maps the star schema one-to-one; `Files/` holds the architecture note, charts, and the PBIP preview. The Power BI Project repoints to the Lakehouse SQL endpoint for a published workspace report.
+
+Full setup, the one-time workspace capacity steps, and an Azure CLI upload path are in [`docs/FABRIC.md`](docs/FABRIC.md). `tests/test_fabric.py` checks the export row-for-row against the warehouse.
+
 ## Layout
 
 ```text
@@ -190,7 +197,7 @@ powerbi/         DAX measure library + generated PBIP project
 site/            static dashboard and PBIP preview (generated)
 scripts/         ingest, views, geography, site build, screenshots
 docs/            plan, findings, forecasting, regional, PowerBI, deploy
-tests/           299 tests
+tests/           313 tests
 ```
 
 `src/ingestion/registry.py` records every dataset's verified dimensions, plus a `NON_EXISTENT_CODES` tuple listing seven dataset codes that were referenced in the original codebase **but do not exist in the Eurostat catalogue**, so they are never reintroduced.

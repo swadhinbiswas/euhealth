@@ -1,4 +1,4 @@
-.PHONY: help setup ingest geo warehouse regional forecast views pbip preview-pbip export-data site screenshots readme-charts test lint fmt check all clean
+.PHONY: help setup ingest geo warehouse regional forecast views pbip preview-pbip export-data site screenshots readme-charts fabric fabric-export test lint fmt check all clean
 
 PY := .venv/bin/python
 
@@ -11,6 +11,7 @@ help:
 	@echo "pbip       generate the Power BI Project (model + 8-page report)"
 	@echo "preview-pbip  render the report preview and screenshot it"
 	@echo "site       generate the static dashboard from the warehouse"
+	@echo "fabric     export the warehouse to a Fabric Lakehouse layout"
 	@echo "screenshots  capture the dashboard for the README (needs chromium)"
 	@echo "regional   build observed NUTS workforce (level-harmonised)"
 	@echo "forecast   run 7 model families with walk-forward validation"
@@ -41,6 +42,13 @@ forecast:
 
 views:
 	$(PY) scripts/build_views.py
+
+# Export the warehouse to the Fabric Lakehouse layout.
+fabric-export:
+	PYTHONPATH=src $(PY) -m src.fabric.export_lakehouse
+
+# Alias: full Fabric artefact set.
+fabric: fabric-export
 
 # Generate the Power BI Project: semantic model + 8-page report.
 pbip:
@@ -78,7 +86,7 @@ fmt:
 
 check: lint test
 
-all: ingest geo warehouse regional forecast views pbip site check
+all: ingest geo warehouse regional forecast views pbip site fabric-export check
 
 clean:
 	rm -rf .pytest_cache .ruff_cache src/__pycache__ src/*/__pycache__ \
