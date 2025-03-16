@@ -177,9 +177,22 @@ Stated up front rather than buried.
 
 ## Microsoft Fabric
 
-The warehouse exports to a Fabric Lakehouse layout by `make fabric-export` into `data/export/fabric_lakehouse/`. The `Tables/`Folder maps the star schema one-to-one; `Files/` holds the architecture note, charts, and the PBIP preview. The Power BI Project repoints to the Lakehouse SQL endpoint for a published workspace report.
+The warehouse exports to a Fabric Lakehouse layout with `make fabric-export`, written to `data/export/fabric_lakehouse/`. The `Tables/` folder maps the star schema one-to-one; `Files/` holds the architecture note, the charts, and the PBIP preview. Full setup, workspace capacity steps, and the Azure CLI upload path are in [`docs/FABRIC.md`](docs/FABRIC.md). `tests/test_fabric.py` checks the export row-for-row against the warehouse.
 
-Full setup, the one-time workspace capacity steps, and an Azure CLI upload path are in [`docs/FABRIC.md`](docs/FABRIC.md). `tests/test_fabric.py` checks the export row-for-row against the warehouse.
+### Import this project into Fabric
+
+1. In the Fabric portal, create a **Lakehouse** named `health_lakehouse` in a workspace.
+2. Generate the Lakehouse layout locally:
+   ```bash
+   make fabric-export
+   ```
+3. Upload `data/export/fabric_lakehouse/Tables/` into the Lakehouse via **Explorer → Upload**, or with the scripted path in [`docs/FABRIC.md`](docs/FABRIC.md).
+4. In a Fabric notebook, promote the Parquet files to Delta:
+   ```python
+   for t in spark.catalog.listTables("health_lakehouse"):
+       spark.sql(f"CONVERT TO DELTA lakehouse.Tables.{t.name}")
+   ```
+5. Create a **Semantic model** over the Delta tables, or repoint the existing PBIP's semantic model to the Lakehouse SQL endpoint, then publish the report.
 
 ## Layout
 
