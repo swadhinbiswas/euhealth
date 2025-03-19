@@ -2,7 +2,7 @@ name: deploy-site
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 # Only one deployment at a time; queued runs supersede older ones.

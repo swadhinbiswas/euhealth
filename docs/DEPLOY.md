@@ -1,4 +1,4 @@
-# Deploying to Cloudflare Pages
+# Deploying the static site
 
 The `site/` directory is fully static: HTML, one CSS file, one JS file, and a
 generated data payload. No build step, no runtime data fetch, no external CDN.
@@ -8,7 +8,7 @@ That makes deployment a file copy.
 
 `.github/workflows/deploy.yml` builds the warehouse, exports the dashboard, and
 publishes `site/` to GitHub Pages. Enable it in **Settings → Pages → Source:
-GitHub Actions** and push to `main`.
+GitHub Actions** and push to `master` (the default branch).
 
 This needs no Cloudflare account and no secrets, and it keeps the site in
 version control alongside the code that generated it.
