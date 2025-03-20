@@ -29,7 +29,10 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: pip install pandas numpy pyarrow duckdb requests pytest
+        # The ml extra is required: statsmodels, scikit-learn, lightgbm and
+        # xgboost are exercised by tests/test_forecasting.py. Skipping them
+        # turns 11 of the 313 tests into import errors rather than passes.
+        run: pip install -e ".[ml,dev]"
 
       # The unit suite is hermetic: it runs against the committed fixture in
       # tests/fixtures and against synthetic panels built in the test module.
@@ -46,7 +49,7 @@ jobs:
         env:
           PYTHONPATH: src
         run: |
-          pip install statsmodels scikit-learn lightgbm xgboost prophet
+          pip install prophet
           python scripts/ingest_all.py health_workforce
           python -m src.warehouse.cli
           python -m src.geo.cli
