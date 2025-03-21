@@ -12,6 +12,8 @@ connect-src requirement.
 from __future__ import annotations
 
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -20,6 +22,72 @@ sys.path.insert(0, str(ROOT / "src"))
 
 SITE = ROOT / "site"
 EXPORT = ROOT / "data" / "export" / "site" / "data.json"
+
+# Every place the repository states how many tests it has, as (file, pattern,
+# replacement). The number is collected from pytest rather than written by hand:
+# a hardcoded count goes stale the week a test is added, and a count is a claim a
+# reviewer can check. Each pattern is anchored so it can only ever touch its own
+# sentence, and each also matches the number a previous build substituted, so
+# rebuilding refreshes rather than accumulates.
+COUNT_SITES: tuple[tuple[Path, re.Pattern[str], str], ...] = (
+    (
+        SITE / "index.html",
+        re.compile(
+            r"(quality gate on every build)(?:\{\{TEST_COUNT\}\}|, \d[\d,]* tests)?"
+        ),
+        r"\g<1>, {n} tests",
+    ),
+    (
+        ROOT / "README.md",
+        re.compile(r"(make test\s+# )\d[\d,]*( tests)"),
+        r"\g<1>{n}\g<2>",
+    ),
+    (
+        ROOT / "README.md",
+        re.compile(r"(^\s*tests/\s+)\d[\d,]*( tests)", re.M),
+        r"\g<1>{n}\g<2>",
+    ),
+)
+
+
+def collect_test_count() -> int | None:
+    """Number of tests pytest collects, or None if that could not be measured."""
+    try:
+        out = subprocess.run(
+            [sys.executable, "-m", "pytest", "--collect-only", "-q", "--no-header"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=300,
+        )
+    except Exception as exc:  # noqa: BLE001 - a missing pytest must not break the build
+        print(f"test count unavailable ({exc})")
+        return None
+    if out.returncode != 0:
+        print(f"test count unavailable: {out.stderr.strip()[-300:]}")
+        return None
+    # Summary line reads e.g. "313 tests collected in 0.42s".
+    match = re.search(r"^(\d+) tests? collected", out.stdout, re.MULTILINE)
+    if not match:
+        print(f"test count unavailable: {out.stdout.strip()[-300:]}")
+        return None
+    return int(match.group(1))
+
+
+def refresh_test_count(count: int | None) -> None:
+    """Write the collected test count into every file that quotes it."""
+    for path, pattern, template in COUNT_SITES:
+        text = path.read_text(encoding="utf-8")
+        if not pattern.search(text):
+            continue
+        if count is None:
+            # Never ship a literal placeholder, and never claim a number we
+            # did not measure. Drop the clause instead.
+            repl = ""
+        else:
+            repl = template.replace("{n}", f"{count:,}")
+        path.write_text(pattern.sub(repl, text), encoding="utf-8")
+    print(f"  test count     {count:,}" if count else "  test count     unavailable")
 
 
 def build() -> int:
@@ -41,6 +109,8 @@ def build() -> int:
     for name in ("index.html",):
         if not (SITE / name).exists():
             raise SystemExit(f"missing template: {SITE / name}")
+
+    refresh_test_count(collect_test_count())
 
     size = (SITE / "assets" / "data.js").stat().st_size
     print(f"site assembled at {SITE}")

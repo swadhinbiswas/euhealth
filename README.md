@@ -33,7 +33,7 @@ make forecast   # 7 model families, walk-forward validated
 make views      # build all 22 semantic views (fails loudly if any is broken)
 make pbip       # generate the Power BI Project (model + 8-page report)
 make site       # generate the static dashboard
-make test       # 313 tests
+make test       # 315 tests
 ```
 
 **To load into Power BI:** connect to `data/healthcare_dw.duckdb`, or publish
@@ -210,7 +210,7 @@ powerbi/         DAX measure library + generated PBIP project
 site/            static dashboard and PBIP preview (generated)
 scripts/         ingest, views, geography, site build, screenshots
 docs/            plan, findings, forecasting, regional, PowerBI, deploy
-tests/           313 tests
+tests/           315 tests
 ```
 
 `src/ingestion/registry.py` records every dataset's verified dimensions, plus a `NON_EXISTENT_CODES` tuple listing seven dataset codes that were referenced in the original codebase **but do not exist in the Eurostat catalogue**, so they are never reintroduced.

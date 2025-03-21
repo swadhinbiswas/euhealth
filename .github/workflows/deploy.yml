@@ -26,7 +26,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install pandas numpy pyarrow duckdb requests
+        # pytest is included so the footer's test count is measured at build
+        # time rather than shipped as a stale or missing number.
+        run: pip install pandas numpy pyarrow duckdb requests pytest
 
       # The site is generated from the warehouse, so the warehouse has to be
       # built first. Sources are cached from the raw landing zone where
